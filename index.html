@@ -50,15 +50,18 @@ html, body {
     z-index: 100;
 }
 
-/* Main */
+/* ===== 主容器：只信 100dvh ===== */
 .main-wrapper {
     position: fixed;
-    inset: 0;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100dvh; /* 關鍵 */
     background: #4CD137;
     padding-top: calc(44px + env(safe-area-inset-top));
 }
 
-/* 上半部內容 */
+/* 上方內容 */
 .top-area {
     text-align: center;
     padding-top: 18px;
@@ -76,13 +79,14 @@ html, body {
     margin-top: 4px;
 }
 
-/* ===== 關鍵：底部強制貼齊 ===== */
+/* ===== 底部群組：Web App 貼齊實體螢幕 ===== */
 .bottom-container {
     position: absolute;
     left: 0;
     right: 0;
-    bottom: env(safe-area-inset-bottom);
-    padding-bottom: 6px;
+    bottom: 0; /* 不再用 margin、不用 auto */
+
+    padding-bottom: env(safe-area-inset-bottom);
 
     display: flex;
     flex-direction: column;
@@ -157,7 +161,7 @@ html, body {
     </div>
 
     <div class="bottom-container">
-        <div class="clock" id="time">12/19 21:49:44</div>
+        <div class="clock" id="time">--/-- --:--:--</div>
 
         <div class="btn"><span class="dot g"></span>上鎖：進入管制模式</div>
         <div class="btn"><span class="dot r"></span>解鎖：離開管制模式</div>
@@ -181,7 +185,7 @@ function updateTime(){
     const h=String(d.getHours()).padStart(2,'0');
     const min=String(d.getMinutes()).padStart(2,'0');
     const s=String(d.getSeconds()).padStart(2,'0');
-    document.getElementById('time').innerText=
+    document.getElementById('time').innerText =
         `${m}/${day} ${h}:${min}:${s}`;
 }
 setInterval(updateTime,1000);
