@@ -44,12 +44,17 @@
         .g { background: #00FF00; box-shadow: 0 0 8px #00FF00; }
         .r { background: #FF0000; box-shadow: 0 0 8px #FF0000; }
 
-        /* 這裡讀取你裁切後的 tag.png */
+        /* 這裡調整標籤圖片 */
         .tag-box { 
-            width: 88%; aspect-ratio: 2.15 / 1; 
+            width: 82%; /* 這裡從 88% 縮小到 82%，讓圖片稍微縮小 */
+            aspect-ratio: 2.1 / 1; /* 微調比例 */
             background-image: url('tag.png'); 
-            background-size: cover; background-position: center;
-            border-radius: 20px; background-color: #fff;
+            background-size: contain; /* 改為 contain，保證圖片上下左右黑邊都不會被裁切 */
+            background-repeat: no-repeat;
+            background-position: center;
+            border-radius: 15px;
+            background-color: transparent; /* 背景改透明，讓圖片本身的顏色決定 */
+            margin-bottom: 5px;
         }
 
         .footer { padding-bottom: calc(15px + env(safe-area-inset-bottom)); text-align: center; font-size: 16px; font-weight: 500; }
@@ -71,7 +76,7 @@
             <div class="tag-box"></div>
         </div>
         <div class="footer">
-            <p id="lockDate">上鎖時間：114/--/-- 07:31:41</p>
+            <p id="lockDate">上鎖時間：114/12/19 07:31:41</p>
             <p>設定檔：V1.03 (08/14 10:00:07)</p>
             <p class="warning">仿 冒 必 究</p>
         </div>
@@ -87,7 +92,8 @@
             document.getElementById('time').innerText = `${m}/${day} ${h}:${min}:${s}`;
             
             let roc = d.getFullYear() - 1911;
-            document.getElementById('lockDate').innerText = `上鎖時間：${roc}/${m}/${day} 07:31:41`;
+            // 這裡固定日期為 12/19 以符合您的截圖需求，若要隨當前日期變動請改回 ${m}/${day}
+            document.getElementById('lockDate').innerText = `上鎖時間：${roc}/12/19 07:31:41`;
         }
         setInterval(up, 1000); up();
     </script>
