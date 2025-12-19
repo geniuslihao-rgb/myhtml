@@ -32,7 +32,7 @@ html, body {
     user-select: none;
 }
 
-/* ===== Header ===== */
+/* ===== Header 修改：加入選單圖示 ===== */
 .header {
     position: fixed;
     top: 0;
@@ -44,10 +44,36 @@ html, body {
     color: #fff;
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: center; /* 標題置中 */
     font-size: 17px;
     font-weight: 600;
     z-index: 10;
+}
+
+/* 選單圖示樣式 */
+.menu-icon {
+    position: absolute;
+    left: 15px;
+    bottom: 12px; /* 根據 header 高度調整 */
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.menu-line {
+    width: 20px;
+    height: 2px;
+    background-color: white;
+}
+
+/* ===== 右上角 IOS 版本號 ===== */
+.ios-version {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 12px;
+    font-weight: 500;
+    color: rgba(0, 0, 0, 0.7); /* 稍微透明的黑色，看起來較自然 */
 }
 
 /* ===== 主結構 ===== */
@@ -71,9 +97,9 @@ html, body {
 
 /* ===== 中間撐滿區 ===== */
 .center-area {
-    flex: 1;                     /* 關鍵：吃掉中間所有空間 */
+    flex: 1;
     display: flex;
-    align-items: center;         /* 垂直置中 */
+    align-items: center;
     justify-content: center;
 }
 
@@ -150,9 +176,17 @@ html, body {
 
 <body>
 
-<div class="header">國軍 MDM V8.1</div>
+<div class="header">
+    <div class="menu-icon">
+        <div class="menu-line"></div>
+        <div class="menu-line"></div>
+        <div class="menu-line"></div>
+    </div>
+    國軍 MDM V8.1
+</div>
 
 <div class="app">
+    <div class="ios-version">IOS:18.7.2</div>
 
     <div class="top-area">
         已上鎖，可進入此管制營區
