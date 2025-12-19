@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, system-ui, sans-serif; }
+        
+        /* 將底層設為黑色，確保瀏海區是黑色 */
+        html, body { 
+            background-color: #000000; 
+            height: 100vh; 
+            width: 100vw;
+            overflow: hidden; 
+        }
+
+        /* 內容區塊才放綠色背景 */
+        .main-wrapper {
+            background-color: #4CD137;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            margin-top: env(safe-area-inset-top); /* 從瀏海下方開始顯示內容 */
+        }
+
+        /* 頂部導覽列（黑條） */
+        .header {
+            background-color: #000000;
+            color: #ffffff;
+            height: 50px;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            z-index: 999;
+        }
+
+        /* 讓黑條往上延伸覆蓋狀態列 */
+        .header::before {
+            content: "";
+            position: absolute;
+            top: -100px; /* 向上延伸 100px 確保填滿 */
+            left: 0;
+            right: 0;
+            height: 100px;
+            background-color: #000000;
+        }
+
+        .menu-icon { position: absolute; left: 18px; font-size: 24px; }
+        .ios-info { position: absolute; right: 15px; bottom: 8px; font-size: 13px; font-weight: 300; }
+        .header-title { font-size: 19px; font-weight: bold; }
+
+        .content { flex: 1; display: flex; flex-direction: column; align-items: center; padding-top: 30px; }
+        .status { font-size: 16px; margin-bottom: 25px; color: #111; }
+        .location { font-size: 82px; font-weight: 500; margin-bottom: 45px; color: #000; letter-spacing: -2px; }
+        .clock { font-size: 44px; font-weight: 700; margin-bottom: 35px; color: #000; }
+
+        .btn { width: 88%; height: 50px; background: rgba(255,255,255,0.3); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 16px; color: #2c5697; font-weight: 600; font-size: 19px; }
+        .dot { width: 11px; height: 11px; border-radius: 50%; margin-right: 12px; }
+        .g { background: #00FF00; box-shadow: 0 0 8px #00FF00; }
+        .r { background: #FF0000; box-shadow: 0 0 8px #FF0000; }
+
+        .tag-box { width: 82%; background: #fff; border-radius: 20px; padding: 22px; margin-top: 15px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        .tag-title { font-size: 20px; font-weight: 800; line-height: 1.4; color: #000; }
+        .tag-sn { font-size: 38px; font-weight: 900; margin-top: 5px; color: #000; font-family: Arial, sans-serif; }
+
+        .footer { padding-bottom: calc(20px + env(safe-area-inset-bottom)); text-align: center; line-height: 1.8; font-size: 17px; color: #000; }
+        .warning { color: #d63031; font-weight: 900; letter-spacing: 6px; margin-top: 5px; font-size: 19px; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="menu-icon">☰</div>
+        <div class="header-title">國軍 MDM V8.1</div>
+        <div class="ios-info">iOS:18.7.2</div>
+    </div>
+
+    <div class="main-wrapper">
+        <div class="content">
+            <p class="status">已上鎖，可進入此管制營區</p>
+            <h1 class="location">左營 18</h1>
+            <div class="clock" id="time">12/19 09:32:00</div>
+            
+            <div class="btn"><span class="dot g"></span> 上鎖：進入管制模式</div>
+            <div class="btn"><span class="dot r"></span> 解鎖：離開管制模式</div>
+            
+            <div class="tag-box">
+                <p class="tag-title">國軍營內民用通信<br>資訊器材管制標籤</p>
+                <p class="tag-sn">C228968404</p>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p id="lock">上鎖時間：114/12/19 07:31:41</p>
+            <p>設定檔：V1.03 (08/14 10:00:07)</p>
+            <p class="warning">仿 冒 必 究</p>
+        </div>
+    </div>
+
+    <script>
+        function up(){
+            let d = new Date();
+            let m = (d.getMonth()+1).toString().padStart(2,'0');
+            let day = d.getDate().toString().padStart(2,'0');
+            let h = d.getHours().toString().padStart(2,'0');
+            let min = d.getMinutes().toString().padStart(2,'0');
+            let s = d.getSeconds().toString().padStart(2,'0');
+            document.getElementById('time').innerText = `${m}/${day} ${h}:${min}:${s}`;
+        }
+        setInterval(up, 1000); up();
+    </script>
+</body>
+</html>
