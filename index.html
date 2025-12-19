@@ -16,7 +16,7 @@
             margin: 0; 
             padding: 0;
             display: flex;
-            flex-direction: column; /* 讓 Header 與 Main 上下排列 */
+            flex-direction: column; 
         }
 
         * { box-sizing: border-box; font-family: -apple-system, sans-serif; }
@@ -28,13 +28,13 @@
             height: calc(44px + env(safe-area-inset-top)); 
             display: flex; align-items: center; justify-content: center;
             color: #fff; font-size: 17px; font-weight: 600;
-            flex-shrink: 0; /* 防止被壓縮 */
+            flex-shrink: 0;
         }
 
-        /* 綠色主要內容區塊：使用 flex-grow 延伸到底部 */
+        /* 綠色主要內容區塊 */
         .main-wrapper {
             background-color: #4CD137;
-            flex-grow: 1; /* 重要：自動撐開填滿剩餘高度，直到螢幕最底 */
+            flex-grow: 1; 
             display: flex; 
             flex-direction: column; 
             align-items: center;
@@ -45,12 +45,12 @@
         .ios-info { position: absolute; right: 12px; top: 8px; font-size: 14px; }
 
         .top-group { text-align: center; padding-top: 25px; }
-        .location { font-size: 82px; font-weight: 500; line-height: 1; margin: 5px ; }
+        .location { font-size: 82px; font-weight: 500; line-height: 1; margin: 5px 0; }
         .clock { font-size: 42px; font-weight: 700; font-variant-numeric: tabular-nums; }
 
         /* 中間按鈕區塊 */
         .bottom-group { 
-            margin-top: 80px; 
+            margin-top: 20px; 
             width: 100%; 
             display: flex; 
             flex-direction: column; 
@@ -79,16 +79,29 @@
             margin-bottom: 5px;
         }
 
-        /* 底部資訊區塊：固定於綠色區域的最下方 */
+        /* 底部資訊區塊 */
         .footer { 
-            margin-top: auto; /* 將 footer 推向底部 */
+            margin-top: auto; 
             padding-bottom: calc(15px + env(safe-area-inset-bottom)); 
             text-align: center; 
             font-size: 16px; 
             font-weight: 500; 
             width: 100%;
         }
-        .warning { color: #d63031; font-weight: 900; font-size: 18px; letter-spacing: 4px; }
+
+        /* 調整下面三行文字的間距 */
+        .footer p {
+            margin: 2px 0; /* 縮小上下外距 */
+            line-height: 1.2; /* 縮小行高 */
+        }
+
+        .warning { 
+            color: #d63031; 
+            font-weight: 900; 
+            font-size: 18px; 
+            letter-spacing: 4px; 
+            margin-top: 4px !important; /* 讓紅字與上一行稍微有一點點距離 */
+        }
     </style>
 </head>
 <body>
@@ -98,7 +111,7 @@
         <div class="ios-info">iOS:18.7.2</div>
         
         <div class="top-group">
-            <p style="font-size: 15px;">已上鎖，可進入此管制營區</p>
+            <p style="font-size: 15px; margin: 0;">已上鎖，可進入此管制營區</p>
             <h1 class="location">左營 18</h1>
             <div class="clock" id="time">--/-- --:--:--</div>
         </div>
@@ -127,7 +140,7 @@
             document.getElementById('time').innerText = `${m}/${day} ${h}:${min}:${s}`;
             
             let roc = d.getFullYear() - 1911;
-            // 固定顯示上鎖日期
+            // 固定顯示上鎖日期，若需動態請自行修改
             document.getElementById('lockDate').innerText = `上鎖時間：${roc}/12/19 07:31:41`;
         }
         setInterval(up, 1000); 
@@ -135,7 +148,3 @@
     </script>
 </body>
 </html>
-
-
-
-
