@@ -2,122 +2,199 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+
+    <!-- 關鍵：iOS Web App 滿版設定 -->
+    <meta name="viewport"
+          content="width=device-width,
+                   initial-scale=1.0,
+                   maximum-scale=1.0,
+                   user-scalable=no,
+                   viewport-fit=cover">
+
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+    <title>MDM V8.1</title>
+
     <style>
-        html, body { 
-            background-color: #000000; 
-            height: 100%; 
-            width: 100%;
-            overflow: hidden; 
-            margin: 0; 
+        /* =========================
+           全域：完全鎖死畫面
+        ========================= */
+        html, body {
+            margin: 0;
             padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;               /* 禁止上下滑動 */
+            background-color: #4CD137;      /* 最外層就是綠色，永不露黑 */
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
         }
 
-        * { box-sizing: border-box; font-family: -apple-system, sans-serif; }
+        * {
+            box-sizing: border-box;
+            user-select: none;
+            -webkit-user-select: none;
+        }
 
+        /* =========================
+           Header（不佔版面高度）
+        ========================= */
         .header {
-            background-color: #000000;
-            padding-top: env(safe-area-inset-top);
-            height: calc(44px + env(safe-area-inset-top)); 
-            display: flex; align-items: center; justify-content: center;
-            color: #fff; font-size: 17px; font-weight: 600;
-            position: relative;
-            z-index: 20;
-        }
-
-        /* 關鍵修正：使用絕對定位撐開綠色背景直到最底部 */
-        .main-wrapper {
-            background-color: #4CD137;
-            position: absolute;
-            top: calc(44px + env(safe-area-inset-top));
-            bottom: 0; /* 強制貼齊螢幕底部，不留黑條 */
+            position: fixed;
+            top: 0;
             left: 0;
             right: 0;
-            display: flex; 
-            flex-direction: column; 
+
+            height: calc(44px + env(safe-area-inset-top));
+            padding-top: env(safe-area-inset-top);
+
+            background-color: #000;
+            color: #fff;
+
+            display: flex;
             align-items: center;
-            z-index: 10;
+            justify-content: center;
+
+            font-size: 17px;
+            font-weight: 600;
+            z-index: 100;
         }
 
-        .ios-info { position: absolute; right: 12px; top: 8px; font-size: 14px; }
+        /* =========================
+           主畫面容器（關鍵）
+        ========================= */
+        .main-wrapper {
+            position: fixed;
+            inset: 0;                       /* 直接鎖定實體畫面 */
+            background-color: #4CD137;
 
-        .top-group { text-align: center; padding-top: 25px; flex-shrink: 0; }
-        .location { font-size: 82px; font-weight: 500; line-height: 1; margin: 5px 0; }
-        
-        /* 底部整塊容器，包含時間、按鈕、標籤與頁尾 */
-        .bottom-container {
-            margin-top: auto; 
-            width: 100%;
             display: flex;
             flex-direction: column;
             align-items: center;
-            /* 預留底部手勢條安全距離，但背景仍會是綠色 */
-            padding-bottom: calc(8px + env(safe-area-inset-bottom));
+
+            padding-top: calc(44px + env(safe-area-inset-top));
+            padding-bottom: env(safe-area-inset-bottom);
+
+            overflow: hidden;               /* 再次保險 */
         }
 
-        .clock { 
-            font-size: 42px; 
-            font-weight: 700; 
-            font-variant-numeric: tabular-nums; 
-            margin-bottom: 12px; 
+        .ios-info {
+            position: absolute;
+            top: calc(env(safe-area-inset-top) + 6px);
+            right: 12px;
+            font-size: 14px;
         }
 
-        .btn { 
-            width: 88%; height: 48px; background: rgba(255, 255, 255, 0.28); 
-            border-radius: 15px; display: flex; align-items: center; justify-content: center; 
-            margin-bottom: 10px; color: #2c5697; font-weight: 600; font-size: 18px; 
+        .top-group {
+            text-align: center;
+            padding-top: 25px;
+            flex-shrink: 0;
         }
-        .dot { width: 10px; height: 10px; border-radius: 50%; margin-right: 12px; }
+
+        .location {
+            font-size: 82px;
+            font-weight: 500;
+            line-height: 1;
+            margin: 5px 0;
+        }
+
+        /* =========================
+           底部內容區
+        ========================= */
+        .bottom-container {
+            margin-top: auto;
+            width: 100%;
+
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+
+            padding-bottom: 8px;
+        }
+
+        .clock {
+            font-size: 42px;
+            font-weight: 700;
+            font-variant-numeric: tabular-nums;
+            margin-bottom: 12px;
+        }
+
+        .btn {
+            width: 88%;
+            height: 48px;
+            background: rgba(255, 255, 255, 0.28);
+            border-radius: 15px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            margin-bottom: 10px;
+            color: #2c5697;
+            font-weight: 600;
+            font-size: 18px;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 12px;
+        }
+
         .g { background: #00FF00; box-shadow: 0 0 8px #00FF00; }
         .r { background: #FF0000; box-shadow: 0 0 8px #FF0000; }
 
-        .tag-box { 
+        .tag-box {
             width: 82%;
             aspect-ratio: 2.1 / 1;
-            background-image: url('tag.png'); 
+            background-image: url('tag.png');
             background-size: contain;
             background-repeat: no-repeat;
             background-position: center;
             margin-bottom: 10px;
         }
 
-        .footer { 
-            text-align: center; 
-            font-size: 16px; 
-            font-weight: 500; 
+        .footer {
+            text-align: center;
+            font-size: 16px;
+            font-weight: 500;
             width: 100%;
         }
 
-        .footer p { margin: 2px 0; line-height: 1.2; }
+        .footer p {
+            margin: 2px 0;
+            line-height: 1.2;
+        }
 
-        .warning { 
-            color: #d63031; 
-            font-weight: 900; 
-            font-size: 18px; 
-            letter-spacing: 4px; 
-            margin-top: 4px !important;
+        .warning {
+            color: #d63031;
+            font-weight: 900;
+            font-size: 18px;
+            letter-spacing: 4px;
+            margin-top: 4px;
         }
     </style>
 </head>
+
 <body>
+
     <div class="header">國軍 MDM V8.1</div>
 
     <div class="main-wrapper">
-        <div class="ios-info">iOS:18.7.2</div>
-        
+        <div class="ios-info">iOS 18.7.2</div>
+
         <div class="top-group">
-            <p style="font-size: 15px; margin: 0;">已上鎖，可進入此管制營區</p>
-            <h1 class="location">左營 18</h1>
+            <p style="font-size:15px; margin:0;">已上鎖，可進入此管制營區</p>
+            <div class="location">左營 18</div>
         </div>
 
         <div class="bottom-container">
             <div class="clock" id="time">--/-- --:--:--</div>
-            
-            <div class="btn"><span class="dot g"></span> 上鎖：進入管制模式</div>
-            <div class="btn"><span class="dot r"></span> 解鎖：離開管制模式</div>
-            
+
+            <div class="btn"><span class="dot g"></span>上鎖：進入管制模式</div>
+            <div class="btn"><span class="dot r"></span>解鎖：離開管制模式</div>
+
             <div class="tag-box"></div>
 
             <div class="footer">
@@ -129,20 +206,25 @@
     </div>
 
     <script>
-        function up(){
-            let d = new Date();
-            let m = (d.getMonth()+1).toString().padStart(2,'0');
-            let day = d.getDate().toString().padStart(2,'0');
-            let h = d.getHours().toString().padStart(2,'0');
-            let min = d.getMinutes().toString().padStart(2,'0');
-            let s = d.getSeconds().toString().padStart(2,'0');
-            document.getElementById('time').innerText = `${m}/${day} ${h}:${min}:${s}`;
-            
-            let roc = d.getFullYear() - 1911;
-            document.getElementById('lockDate').innerText = `上鎖時間：${roc}/12/19 07:31:41`;
+        function updateTime() {
+            const d = new Date();
+            const m = String(d.getMonth() + 1).padStart(2, '0');
+            const day = String(d.getDate()).padStart(2, '0');
+            const h = String(d.getHours()).padStart(2, '0');
+            const min = String(d.getMinutes()).padStart(2, '0');
+            const s = String(d.getSeconds()).padStart(2, '0');
+
+            document.getElementById('time').innerText =
+                `${m}/${day} ${h}:${min}:${s}`;
+
+            const roc = d.getFullYear() - 1911;
+            document.getElementById('lockDate').innerText =
+                `上鎖時間：${roc}/12/19 07:31:41`;
         }
-        setInterval(up, 1000); 
-        up();
+
+        setInterval(updateTime, 1000);
+        updateTime();
     </script>
+
 </body>
 </html>
