@@ -6,7 +6,6 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <style>
-        /* 讓 html 與 body 成為滿版容器 */
         html, body { 
             background-color: #000000; 
             height: 100%; 
@@ -21,7 +20,6 @@
 
         * { box-sizing: border-box; font-family: -apple-system, sans-serif; }
 
-        /* 上方黑色標題區塊 */
         .header {
             background-color: #000000;
             padding-top: env(safe-area-inset-top);
@@ -31,14 +29,12 @@
             flex-shrink: 0;
         }
 
-        /* 綠色主要內容區塊 */
         .main-wrapper {
             background-color: #4CD137;
             flex-grow: 1; 
             display: flex; 
             flex-direction: column; 
             align-items: center;
-            /* 新增：讓子元素分布在兩端 */
             justify-content: space-between; 
             position: relative;
             width: 100%;
@@ -48,16 +44,23 @@
 
         .top-group { text-align: center; padding-top: 25px; }
         .location { font-size: 82px; font-weight: 500; line-height: 1; margin: 5px 0; }
-        .clock { font-size: 42px; font-weight: 700; font-variant-numeric: tabular-nums; }
+        
+        /* 時間欄位樣式調整：增加一點下方間距 */
+        .clock { 
+            font-size: 42px; 
+            font-weight: 700; 
+            font-variant-numeric: tabular-nums; 
+            margin-bottom: 10px; 
+        }
 
-        /* 修改：將按鈕與標籤區塊推向底部 */
+        /* 底部群組：包含時間、按鈕、標籤 */
         .bottom-group { 
-            margin-top: auto; /* 關鍵：自動推擠上方空間 */
+            margin-top: auto; 
             width: 100%; 
             display: flex; 
             flex-direction: column; 
             align-items: center; 
-            margin-bottom: 10px; /* 與下方資訊欄位的間距 */
+            margin-bottom: 10px; 
         }
         
         .btn { 
@@ -69,7 +72,6 @@
         .g { background: #00FF00; box-shadow: 0 0 8px #00FF00; }
         .r { background: #FF0000; box-shadow: 0 0 8px #FF0000; }
 
-        /* 標籤圖片區塊 */
         .tag-box { 
             width: 82%;
             aspect-ratio: 2.1 / 1;
@@ -82,9 +84,7 @@
             margin-bottom: 5px;
         }
 
-        /* 底部資訊區塊 */
         .footer { 
-            /* 移除 margin-top: auto，改為靠 bottom-group 推擠 */
             padding-bottom: calc(15px + env(safe-area-inset-bottom)); 
             text-align: center; 
             font-size: 16px; 
@@ -93,10 +93,7 @@
             flex-shrink: 0;
         }
 
-        .footer p {
-            margin: 2px 0;
-            line-height: 1.2;
-        }
+        .footer p { margin: 2px 0; line-height: 1.2; }
 
         .warning { 
             color: #d63031; 
@@ -116,10 +113,10 @@
         <div class="top-group">
             <p style="font-size: 15px; margin: 0;">已上鎖，可進入此管制營區</p>
             <h1 class="location">左營 18</h1>
-            <div class="clock" id="time">--/-- --:--:--</div>
         </div>
 
         <div class="bottom-group">
+            <div class="clock" id="time">--/-- --:--:--</div>
             <div class="btn"><span class="dot g"></span> 上鎖：進入管制模式</div>
             <div class="btn"><span class="dot r"></span> 解鎖：離開管制模式</div>
             <div class="tag-box"></div>
