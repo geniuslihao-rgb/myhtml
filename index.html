@@ -1,218 +1,192 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-    <meta charset="UTF-8">
+<meta charset="UTF-8">
 
-    <meta name="viewport"
-          content="width=device-width,
-                   initial-scale=1.0,
-                   maximum-scale=1.0,
-                   user-scalable=no,
-                   viewport-fit=cover">
+<meta name="viewport"
+      content="width=device-width,
+               initial-scale=1.0,
+               maximum-scale=1.0,
+               user-scalable=no,
+               viewport-fit=cover">
 
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
-    <title>MDM V8.1</title>
+<title>MDM V8.1</title>
 
-    <style>
-        html, body {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            background-color: #4CD137;
-            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-        }
+<style>
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: #4CD137;
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+}
 
-        * {
-            box-sizing: border-box;
-            user-select: none;
-            -webkit-user-select: none;
-        }
+* {
+    box-sizing: border-box;
+    -webkit-user-select: none;
+    user-select: none;
+}
 
-        /* Header */
-        .header {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
+/* Header */
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: calc(44px + env(safe-area-inset-top));
+    padding-top: env(safe-area-inset-top);
+    background: #000;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 17px;
+    font-weight: 600;
+    z-index: 100;
+}
 
-            height: calc(44px + env(safe-area-inset-top));
-            padding-top: env(safe-area-inset-top);
+/* Main */
+.main-wrapper {
+    position: fixed;
+    inset: 0;
+    background: #4CD137;
+    padding-top: calc(44px + env(safe-area-inset-top));
+}
 
-            background-color: #000;
-            color: #fff;
+/* 上半部內容 */
+.top-area {
+    text-align: center;
+    padding-top: 18px;
+}
 
-            display: flex;
-            align-items: center;
-            justify-content: center;
+.top-area p {
+    margin: 0;
+    font-size: 14px;
+}
 
-            font-size: 17px;
-            font-weight: 600;
-            z-index: 100;
-        }
+.location {
+    font-size: 86px;
+    font-weight: 600;
+    line-height: 1;
+    margin-top: 4px;
+}
 
-        /* Main */
-        .main-wrapper {
-            position: fixed;
-            inset: 0;
-            background-color: #4CD137;
+/* ===== 關鍵：底部強制貼齊 ===== */
+.bottom-container {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: env(safe-area-inset-bottom);
+    padding-bottom: 6px;
 
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
 
-            padding-top: calc(44px + env(safe-area-inset-top));
-            padding-bottom: env(safe-area-inset-bottom);
+.clock {
+    font-size: 42px;
+    font-weight: 800;
+    margin-bottom: 8px;
+}
 
-            overflow: hidden;
-        }
+.btn {
+    width: 88%;
+    height: 46px;
+    background: rgba(255,255,255,0.28);
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 8px;
+    font-size: 17px;
+    font-weight: 600;
+    color: #2c5697;
+}
 
-        .ios-info {
-            position: absolute;
-            top: calc(env(safe-area-inset-top) + 6px);
-            right: 12px;
-            font-size: 14px;
-        }
+.dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+.g { background:#00FF00; box-shadow:0 0 6px #00FF00; }
+.r { background:#FF0000; box-shadow:0 0 6px #FF0000; }
 
-        .top-group {
-            text-align: center;
-            padding-top: 22px;
-            flex-shrink: 0;
-        }
+.tag-box {
+    width: 80%;
+    aspect-ratio: 2.1 / 1;
+    background: url('tag.png') center/contain no-repeat;
+    margin-bottom: 6px;
+}
 
-        .location {
-            font-size: 78px;
-            font-weight: 500;
-            line-height: 1;
-            margin: 4px 0 0;
-        }
+.footer {
+    text-align: center;
+    font-size: 15px;
+    line-height: 1.15;
+}
 
-        /* Bottom aligned group */
-        .bottom-container {
-            margin-top: auto;
-            width: 100%;
+.footer p {
+    margin: 1px 0;
+}
 
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-
-            padding-bottom: calc(6px + env(safe-area-inset-bottom));
-        }
-
-        .clock {
-            font-size: 40px;
-            font-weight: 700;
-            margin-bottom: 8px;
-        }
-
-        .btn {
-            width: 88%;
-            height: 46px;
-            background: rgba(255, 255, 255, 0.28);
-            border-radius: 15px;
-
-            display: flex;
-            align-items: center;
-            justify-content: center;
-
-            margin-bottom: 8px;
-            color: #2c5697;
-            font-weight: 600;
-            font-size: 17px;
-        }
-
-        .dot {
-            width: 9px;
-            height: 9px;
-            border-radius: 50%;
-            margin-right: 10px;
-        }
-
-        .g { background: #00FF00; box-shadow: 0 0 6px #00FF00; }
-        .r { background: #FF0000; box-shadow: 0 0 6px #FF0000; }
-
-        .tag-box {
-            width: 78%;
-            aspect-ratio: 2.1 / 1;
-            background-image: url('tag.png');
-            background-size: contain;
-            background-repeat: no-repeat;
-            background-position: center;
-            margin-bottom: 6px;
-        }
-
-        .footer {
-            text-align: center;
-            font-size: 15px;
-            font-weight: 500;
-            line-height: 1.15;
-        }
-
-        .footer p {
-            margin: 1px 0;
-        }
-
-        .warning {
-            margin-top: 4px;
-            color: #d63031;
-            font-weight: 900;
-            font-size: 17px;
-            letter-spacing: 4px;
-        }
-    </style>
+.warning {
+    margin-top: 4px;
+    font-size: 17px;
+    font-weight: 900;
+    letter-spacing: 4px;
+    color: #d63031;
+}
+</style>
 </head>
 
 <body>
 
-    <div class="header">國軍 MDM V8.1</div>
+<div class="header">國軍 MDM V8.1</div>
 
-    <div class="main-wrapper">
-        <div class="ios-info">iOS 18.7.2</div>
+<div class="main-wrapper">
 
-        <div class="top-group">
-            <p style="font-size:14px; margin:0;">已上鎖，可進入此管制營區</p>
-            <div class="location">左營 18</div>
-        </div>
+    <div class="top-area">
+        <p>已上鎖，可進入此管制營區</p>
+        <div class="location">左營 18</div>
+    </div>
 
-        <div class="bottom-container">
-            <div class="clock" id="time">--/-- --:--:--</div>
+    <div class="bottom-container">
+        <div class="clock" id="time">12/19 21:49:44</div>
 
-            <div class="btn"><span class="dot g"></span>上鎖：進入管制模式</div>
-            <div class="btn"><span class="dot r"></span>解鎖：離開管制模式</div>
+        <div class="btn"><span class="dot g"></span>上鎖：進入管制模式</div>
+        <div class="btn"><span class="dot r"></span>解鎖：離開管制模式</div>
 
-            <div class="tag-box"></div>
+        <div class="tag-box"></div>
 
-            <div class="footer">
-                <p id="lockDate">上鎖時間：114/12/19 07:31:41</p>
-                <p>設定檔：V1.03 (08/14 10:00:07)</p>
-                <p class="warning">仿 冒 必 究</p>
-            </div>
+        <div class="footer">
+            <p id="lockDate">上鎖時間：114/12/19 07:31:41</p>
+            <p>設定檔：V1.03 (08/14 10:00:07)</p>
+            <p class="warning">仿 冒 必 究</p>
         </div>
     </div>
 
-    <script>
-        function updateTime() {
-            const d = new Date();
-            const m = String(d.getMonth() + 1).padStart(2, '0');
-            const day = String(d.getDate()).padStart(2, '0');
-            const h = String(d.getHours()).padStart(2, '0');
-            const min = String(d.getMinutes()).padStart(2, '0');
-            const s = String(d.getSeconds()).padStart(2, '0');
+</div>
 
-            document.getElementById('time').innerText =
-                `${m}/${day} ${h}:${min}:${s}`;
-
-            const roc = d.getFullYear() - 1911;
-            document.getElementById('lockDate').innerText =
-                `上鎖時間：${roc}/12/19 07:31:41`;
-        }
-
-        setInterval(updateTime, 1000);
-        updateTime();
-    </script>
+<script>
+function updateTime(){
+    const d=new Date();
+    const m=String(d.getMonth()+1).padStart(2,'0');
+    const day=String(d.getDate()).padStart(2,'0');
+    const h=String(d.getHours()).padStart(2,'0');
+    const min=String(d.getMinutes()).padStart(2,'0');
+    const s=String(d.getSeconds()).padStart(2,'0');
+    document.getElementById('time').innerText=
+        `${m}/${day} ${h}:${min}:${s}`;
+}
+setInterval(updateTime,1000);
+updateTime();
+</script>
 
 </body>
 </html>
