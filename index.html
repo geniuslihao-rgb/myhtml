@@ -44,24 +44,18 @@
         .g { background: #00FF00; box-shadow: 0 0 8px #00FF00; }
         .r { background: #FF0000; box-shadow: 0 0 8px #FF0000; }
 
-        /* --- 重點修改區域 --- */
+        /* 這裡調整標籤圖片 */
         .tag-box { 
-            width: 85%; /* 稍微調寬一點點 */
-            aspect-ratio: 2.1 / 1; /* 維持橫向比例容器 */
+            width: 82%; /* 這裡從 88% 縮小到 82%，讓圖片稍微縮小 */
+            aspect-ratio: 2.1 / 1; /* 微調比例 */
             background-image: url('tag.png'); 
-            background-size: contain; /* 保持圖片完整顯示不裁切 */
+            background-size: contain; /* 改為 contain，保證圖片上下左右黑邊都不會被裁切 */
             background-repeat: no-repeat;
             background-position: center;
-            
-            /* 關鍵：強制背景為黑色，並加上內距來產生黑邊效果 */
-            background-color: #000000; 
-            padding: 6px; /* 這個數值控制黑邊的粗細 */
-            border-radius: 20px; /* 讓黑邊框也有圓角 */
-            
-            /* 確保背景圖只在 content 區域顯示，不蓋到 padding */
-            background-origin: content-box; 
+            border-radius: 15px;
+            background-color: transparent; /* 背景改透明，讓圖片本身的顏色決定 */
+            margin-bottom: 5px;
         }
-        /* -------------------- */
 
         .footer { padding-bottom: calc(15px + env(safe-area-inset-bottom)); text-align: center; font-size: 16px; font-weight: 500; }
         .warning { color: #d63031; font-weight: 900; font-size: 18px; letter-spacing: 4px; }
@@ -98,6 +92,7 @@
             document.getElementById('time').innerText = `${m}/${day} ${h}:${min}:${s}`;
             
             let roc = d.getFullYear() - 1911;
+            // 這裡固定日期為 12/19 以符合您的截圖需求，若要隨當前日期變動請改回 ${m}/${day}
             document.getElementById('lockDate').innerText = `上鎖時間：${roc}/12/19 07:31:41`;
         }
         setInterval(up, 1000); up();
