@@ -9,7 +9,6 @@
     <meta name="apple-mobile-web-app-title" content="國軍 MDM">
 
     <style>
-        /* 確保 body 撐滿螢幕且不產生滾動條 */
         html, body { 
             background-color: #000000; 
             height: 100%; 
@@ -18,9 +17,10 @@
             position: fixed;
             margin: 0;
             padding: 0;
+            -webkit-user-select: none; /* 防止長按選取 */
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, sans-serif; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, "SF Pro Display", "Helvetica Neue", sans-serif; }
 
         /* 頂部黑欄 */
         .header {
@@ -37,7 +37,6 @@
         /* 綠色主容器 */
         .main-wrapper {
             background-color: #4CD137;
-            /* 精確計算剩餘高度，避免溢出產生網址列 */
             height: calc(100% - (44px + env(safe-area-inset-top)));
             width: 100%;
             display: flex; 
@@ -45,7 +44,7 @@
             position: relative;
         }
 
-        .ios-info { position: absolute; right: 10px; top: 6px; font-size: 14px; color: #000; }
+        .ios-info { position: absolute; right: 10px; top: 6px; font-size: 14px; color: #000; font-weight: 400; }
 
         /* 內容區塊 */
         .content { 
@@ -59,9 +58,9 @@
         .top-group { text-align: center; padding-top: 25px; }
         .status { font-size: 15px; margin-bottom: 5px; font-weight: 500; }
         .location { font-size: 80px; font-weight: 500; margin-bottom: 5px; letter-spacing: -2px; line-height: 1; }
-        .clock { font-size: 42px; font-weight: 700; margin-top: 5px; }
+        .clock { font-size: 42px; font-weight: 700; margin-top: 5px; font-variant-numeric: tabular-nums; }
 
-        /* 操作區塊沉底 */
+        /* 操作區塊 */
         .bottom-action-group {
             margin-top: auto; 
             width: 100%;
@@ -80,17 +79,17 @@
         .g { background: #00FF00; box-shadow: 0 0 8px #00FF00; }
         .r { background: #FF0000; box-shadow: 0 0 8px #FF0000; }
 
-        /* 白色標籤盒 - 預留背景圖片位置 */
+        /* 圖片標籤盒 - 使用 Base64 嵌入你提供的圖檔 */
         .tag-box-img { 
-            width: 84%; 
-            aspect-ratio: 2.1 / 1; /* 根據照片比例設定 */
+            width: 88%; 
+            aspect-ratio: 1.8 / 1; 
             background-color: #fff;
-            /* 請將裁切後的標籤圖命名為 tag.png 放在同目錄 */
-            background-image: url('tag.png'); 
-            background-size: cover;
+            background-image: url('data:image/png;base64,這裡請替換成圖片的Base64代碼'); 
+            background-size: 100% 100%;
             background-repeat: no-repeat;
             background-position: center;
             border-radius: 20px;
+            margin-bottom: 10px;
         }
 
         /* 底部頁尾資訊 */
@@ -98,7 +97,7 @@
             padding-bottom: calc(10px + env(safe-area-inset-bottom)); 
             text-align: center; font-size: 16px; font-weight: 500; line-height: 1.35;
         }
-        .warning { color: #d63031; font-weight: 900; font-size: 18px; margin-top: 2px; }
+        .warning { color: #d63031; font-weight: 900; font-size: 18px; margin-top: 2px; letter-spacing: 4px; }
     </style>
 </head>
 <body>
@@ -112,26 +111,26 @@
             <div class="top-group">
                 <p class="status">已上鎖，可進入此管制營區</p>
                 <h1 class="location">左營 18</h1>
-                <div class="clock" id="time">12/19 16:11:42</div>
+                <div class="clock" id="time">--/-- --:--:--</div>
             </div>
 
             <div class="bottom-action-group">
                 <div class="btn"><span class="dot g"></span> 上鎖：進入管制模式</div>
                 <div class="btn"><span class="dot r"></span> 解鎖：離開管制模式</div>
-                <div class="tag-box-img"></div>
+                <div class="tag-box-img" id="tagImage"></div>
             </div>
         </div>
 
         <div class="footer">
-            <p id="lock">上鎖時間：114/12/19 07:31:41</p>
+            <p id="lockDate">上鎖時間：114/--/-- 07:31:41</p>
             <p>設定檔：V1.03 (08/14 10:00:07)</p>
             <p class="warning">仿 冒 必 究</p>
         </div>
     </div>
 
     <script>
-        // 更新時間
-        function up(){
+        // 1. 自動更新現在時間
+        function updateClock(){
             let d = new Date();
             let m = (d.getMonth()+1).toString().padStart(2,'0');
             let day = d.getDate().toString().padStart(2,'0');
@@ -140,15 +139,22 @@
             let s = d.getSeconds().toString().padStart(2,'0');
             document.getElementById('time').innerText = `${m}/${day} ${h}:${min}:${s}`;
         }
-        setInterval(up, 1000); up();
+        setInterval(updateClock, 1000); 
+        updateClock();
 
-        // 防止在 PWA 模式下點擊觸發跳轉導致網址列出現
-        document.addEventListener('click', function(e) {
-            if (e.target.tagName === 'A') {
-                e.preventDefault();
-                window.location.href = e.target.href;
-            }
-        }, false);
+        // 2. 自動設定今天的上鎖日期 (民國年)
+        function setLockDate() {
+            let d = new Date();
+            let rocYear = d.getFullYear() - 1911;
+            let m = (d.getMonth()+1).toString().padStart(2,'0');
+            let day = d.getDate().toString().padStart(2,'0');
+            document.getElementById('lockDate').innerText = `上鎖時間：${rocYear}/${m}/${day} 07:31:41`;
+        }
+        setLockDate();
+
+        // 3. 圖片處理：建議將你上傳的那張標籤圖轉為 Base64 填入上方 CSS
+        // 這裡為了方便你操作，可以手動把圖片放到同目錄命名為 tag.png
+        // 或是直接將圖片檔案拖進開發工具轉碼
     </script>
 </body>
 </html>
