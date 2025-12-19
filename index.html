@@ -44,21 +44,20 @@
 
         .ios-info { position: absolute; right: 12px; top: 8px; font-size: 14px; }
 
-        /* 上方文字群組調整 */
         .top-group { text-align: center; padding-top: 25px; }
         .location { font-size: 82px; font-weight: 500; line-height: 1; margin: 5px 0; }
         
-        /* 這裡是調整時間位置的重點 */
+        /* 使用 transform 移動，不影響後方排版 */
         .clock { 
             font-size: 42px; 
             font-weight: 700; 
             font-variant-numeric: tabular-nums; 
-            margin-top: 25px; /* 增加這個數值可以讓時間更往下靠 */
+            transform: translateY(20px); /* 正數往下移動，負數往上，且不會推擠到下方的按鈕 */
         }
 
-        /* 中間按鈕區塊 */
+        /* 中間按鈕區塊 - 位置現在被固定住了，不受時間欄位影響 */
         .bottom-group { 
-            margin-top: 15px; 
+            margin-top: 20px; 
             width: 100%; 
             display: flex; 
             flex-direction: column; 
@@ -96,7 +95,7 @@
             width: 100%;
         }
 
-        /* 縮小底部三行間距 */
+        /* 底部三行文字間距 */
         .footer p {
             margin: 2px 0; 
             line-height: 1.2;
