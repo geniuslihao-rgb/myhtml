@@ -3,16 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="國軍 MDM">
+
     <style>
+        /* 確保 body 撐滿螢幕且不產生滾動條 */
         html, body { 
             background-color: #000000; 
-            height: 100%; width: 100%;
-            overflow: hidden; position: fixed;
-            margin: 0; padding: 0;
+            height: 100%; 
+            width: 100%;
+            overflow: hidden; 
+            position: fixed;
+            margin: 0;
+            padding: 0;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, sans-serif; }
 
+        /* 頂部黑欄 */
         .header {
             background-color: #000000;
             padding-top: env(safe-area-inset-top);
@@ -24,20 +34,36 @@
 
         .header-title { color: #fff; font-size: 17px; font-weight: 600; position: absolute; bottom: 12px; }
 
+        /* 綠色主容器 */
         .main-wrapper {
             background-color: #4CD137;
-            height: calc(100% - 44px - env(safe-area-inset-top));
-            display: flex; flex-direction: column; position: relative;
+            /* 精確計算剩餘高度，避免溢出產生網址列 */
+            height: calc(100% - (44px + env(safe-area-inset-top)));
+            width: 100%;
+            display: flex; 
+            flex-direction: column; 
+            position: relative;
         }
 
-        /* 標題與時間群組 */
-        .top-group { text-align: center; padding-top: 30px; }
-        .location { font-size: 82px; font-weight: 500; margin-bottom: 5px; color: #000; }
-        .clock { font-size: 42px; font-weight: 700; color: #000; }
+        .ios-info { position: absolute; right: 10px; top: 6px; font-size: 14px; color: #000; }
 
-        /* 操作區塊置底 */
+        /* 內容區塊 */
+        .content { 
+            flex: 1; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center;
+        }
+
+        /* 頂部文字 */
+        .top-group { text-align: center; padding-top: 25px; }
+        .status { font-size: 15px; margin-bottom: 5px; font-weight: 500; }
+        .location { font-size: 80px; font-weight: 500; margin-bottom: 5px; letter-spacing: -2px; line-height: 1; }
+        .clock { font-size: 42px; font-weight: 700; margin-top: 5px; }
+
+        /* 操作區塊沉底 */
         .bottom-action-group {
-            margin-top: auto;
+            margin-top: auto; 
             width: 100%;
             display: flex; flex-direction: column; align-items: center;
             padding-bottom: 5px; 
@@ -50,26 +76,29 @@
             display: flex; align-items: center; justify-content: center; 
             margin-bottom: 10px; color: #2c5697; font-weight: 600; font-size: 18px; 
         }
+        .dot { width: 10px; height: 10px; border-radius: 50%; margin-right: 12px; }
+        .g { background: #00FF00; box-shadow: 0 0 8px #00FF00; }
+        .r { background: #FF0000; box-shadow: 0 0 8px #FF0000; }
 
-        /* 關鍵修正：使用您截圖的圖片作為背景 */
+        /* 白色標籤盒 - 預留背景圖片位置 */
         .tag-box-img { 
             width: 84%; 
-            /* 根據圖片比例調整高度，以下為範例 */
-            aspect-ratio: 300 / 140; 
-            background-image: url('tag_bg.png'); /* 指向您的截圖檔案 */
-            background-size: contain;
+            aspect-ratio: 2.1 / 1; /* 根據照片比例設定 */
+            background-color: #fff;
+            /* 請將裁切後的標籤圖命名為 tag.png 放在同目錄 */
+            background-image: url('tag.png'); 
+            background-size: cover;
             background-repeat: no-repeat;
             background-position: center;
             border-radius: 20px;
-            /* 如果您不想裁切文字，只想用浮水印，請讓此盒裝入文字；
-               如果您是直接裁切「整塊白色標籤包含文字」，那這裡就不用放文字內容 */
         }
 
+        /* 底部頁尾資訊 */
         .footer { 
-            padding-bottom: calc(8px + env(safe-area-inset-bottom)); 
-            text-align: center; font-size: 17px; color: #000; line-height: 1.3; font-weight: 500;
+            padding-bottom: calc(10px + env(safe-area-inset-bottom)); 
+            text-align: center; font-size: 16px; font-weight: 500; line-height: 1.35;
         }
-        .warning { color: #d63031; font-weight: 900; font-size: 19px; }
+        .warning { color: #d63031; font-weight: 900; font-size: 18px; margin-top: 2px; }
     </style>
 </head>
 <body>
@@ -78,28 +107,30 @@
     </div>
 
     <div class="main-wrapper">
-        <div class="content" style="flex:1; display:flex; flex-direction:column;">
+        <div class="ios-info">iOS:18.7.2</div>
+        <div class="content">
             <div class="top-group">
+                <p class="status">已上鎖，可進入此管制營區</p>
                 <h1 class="location">左營 18</h1>
                 <div class="clock" id="time">12/19 16:11:42</div>
             </div>
 
             <div class="bottom-action-group">
-                <div class="btn">上鎖：進入管制模式</div>
-                <div class="btn">解鎖：離開管制模式</div>
-                
+                <div class="btn"><span class="dot g"></span> 上鎖：進入管制模式</div>
+                <div class="btn"><span class="dot r"></span> 解鎖：離開管制模式</div>
                 <div class="tag-box-img"></div>
             </div>
         </div>
 
         <div class="footer">
-            <p>上鎖時間：114/12/19 07:31:41</p>
+            <p id="lock">上鎖時間：114/12/19 07:31:41</p>
             <p>設定檔：V1.03 (08/14 10:00:07)</p>
             <p class="warning">仿 冒 必 究</p>
         </div>
     </div>
 
     <script>
+        // 更新時間
         function up(){
             let d = new Date();
             let m = (d.getMonth()+1).toString().padStart(2,'0');
@@ -110,6 +141,14 @@
             document.getElementById('time').innerText = `${m}/${day} ${h}:${min}:${s}`;
         }
         setInterval(up, 1000); up();
+
+        // 防止在 PWA 模式下點擊觸發跳轉導致網址列出現
+        document.addEventListener('click', function(e) {
+            if (e.target.tagName === 'A') {
+                e.preventDefault();
+                window.location.href = e.target.href;
+            }
+        }, false);
     </script>
 </body>
 </html>
