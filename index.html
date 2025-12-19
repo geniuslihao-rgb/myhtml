@@ -38,6 +38,8 @@
             display: flex; 
             flex-direction: column; 
             align-items: center;
+            /* 新增：讓子元素分布在兩端 */
+            justify-content: space-between; 
             position: relative;
             width: 100%;
         }
@@ -48,13 +50,14 @@
         .location { font-size: 82px; font-weight: 500; line-height: 1; margin: 5px 0; }
         .clock { font-size: 42px; font-weight: 700; font-variant-numeric: tabular-nums; }
 
-        /* 中間按鈕區塊 */
+        /* 修改：將按鈕與標籤區塊推向底部 */
         .bottom-group { 
-            margin-top: 20px; 
+            margin-top: auto; /* 關鍵：自動推擠上方空間 */
             width: 100%; 
             display: flex; 
             flex-direction: column; 
             align-items: center; 
+            margin-bottom: 10px; /* 與下方資訊欄位的間距 */
         }
         
         .btn { 
@@ -81,18 +84,18 @@
 
         /* 底部資訊區塊 */
         .footer { 
-            margin-top: auto; 
+            /* 移除 margin-top: auto，改為靠 bottom-group 推擠 */
             padding-bottom: calc(15px + env(safe-area-inset-bottom)); 
             text-align: center; 
             font-size: 16px; 
             font-weight: 500; 
             width: 100%;
+            flex-shrink: 0;
         }
 
-        /* 調整下面三行文字的間距 */
         .footer p {
-            margin: 2px 0; /* 縮小上下外距 */
-            line-height: 1.2; /* 縮小行高 */
+            margin: 2px 0;
+            line-height: 1.2;
         }
 
         .warning { 
@@ -100,7 +103,7 @@
             font-weight: 900; 
             font-size: 18px; 
             letter-spacing: 4px; 
-            margin-top: 4px !important; /* 讓紅字與上一行稍微有一點點距離 */
+            margin-top: 4px !important;
         }
     </style>
 </head>
@@ -140,7 +143,6 @@
             document.getElementById('time').innerText = `${m}/${day} ${h}:${min}:${s}`;
             
             let roc = d.getFullYear() - 1911;
-            // 固定顯示上鎖日期，若需動態請自行修改
             document.getElementById('lockDate').innerText = `上鎖時間：${roc}/12/19 07:31:41`;
         }
         setInterval(up, 1000); 
