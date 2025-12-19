@@ -6,7 +6,6 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <style>
-        /* 強制鎖定螢幕比例，禁止溢出 */
         html, body { 
             background-color: #000000; 
             height: 100%; 
@@ -24,33 +23,36 @@
             font-family: -apple-system, "SF Pro Text", system-ui, sans-serif; 
         }
 
-        /* 縮減黑欄高度：只保留必要的高度，避免擠壓下方空間 */
+        /* 2. 優化黑欄：
+           padding-top 使用 env(safe-area-inset-top) 自動避開瀏海。
+           height 設定為內容高度（44px 是 iOS 標準標題列高度）。
+        */
         .header {
             background-color: #000000;
             color: #ffffff;
-            /* 將 padding-top 限制在安全區域，height 設為極小值 */
-            padding-top: env(safe-area-inset-top);
-            height: 40px; 
+            padding-top: env(safe-area-inset-top); /* 避開系統狀態列/瀏海 */
+            height: calc(44px + env(safe-area-inset-top)); 
             width: 100%;
             display: flex;
-            align-items: center;
+            align-items: flex-end; /* 將內容對齊到黑欄底部，緊貼綠色區域 */
             justify-content: center;
             position: relative;
             z-index: 100;
+            padding-bottom: 10px; /* 標題離綠色邊界的間距 */
         }
 
         .menu-icon { position: absolute; left: 18px; font-size: 20px; bottom: 10px; }
-        .header-title { font-size: 18px; font-weight: bold; position: absolute; bottom: 10px; }
+        .header-title { font-size: 18px; font-weight: bold; }
 
-        /* 主容器：高度精確計算為 100% 減去黑欄高度 */
+        /* 3. 主容器：自動填滿剩下空間 */
         .main-wrapper {
             background-color: #4CD137;
-            height: calc(100% - 40px - env(safe-area-inset-top));
+            height: calc(100% - (44px + env(safe-area-inset-top)));
             width: 100%;
             display: flex;
             flex-direction: column;
             position: relative;
-            overflow: hidden; /* 確保內部元件不會撐開高度 */
+            overflow: hidden;
         }
 
         .ios-info { 
@@ -62,28 +64,27 @@
             z-index: 20;
         }
 
-        /* 內容區塊間距微調，確保所有元件都能在一個畫面內顯示 */
         .content { 
             flex: 1; 
             display: flex; 
             flex-direction: column; 
             align-items: center; 
-            padding-top: 25px; 
+            padding-top: 20px; 
         }
 
-        .status { font-size: 15px; margin-bottom: 15px; color: #000; }
-        .location { font-size: 76px; font-weight: 500; margin-bottom: 25px; color: #000; letter-spacing: -2px; line-height: 1; }
-        .clock { font-size: 40px; font-weight: 700; margin-bottom: 25px; color: #000; }
+        .status { font-size: 15px; margin-bottom: 10px; color: #000; }
+        .location { font-size: 72px; font-weight: 500; margin-bottom: 20px; color: #000; letter-spacing: -2px; line-height: 1; }
+        .clock { font-size: 38px; font-weight: 700; margin-bottom: 20px; color: #000; }
 
         .btn { 
             width: 86%; 
-            height: 46px; 
+            height: 44px; 
             background: rgba(255,255,255,0.3); 
             border-radius: 12px; 
             display: flex; 
             align-items: center; 
             justify-content: center; 
-            margin-bottom: 12px; 
+            margin-bottom: 10px; 
             color: #2c5697; 
             font-weight: 600; 
             font-size: 18px; 
@@ -96,18 +97,17 @@
             width: 80%; 
             background: #fff; 
             border-radius: 18px; 
-            padding: 15px; 
+            padding: 12px; 
             margin-top: 5px; 
             text-align: center; 
         }
-        .tag-title { font-size: 18px; font-weight: 800; line-height: 1.3; color: #000; }
-        .tag-sn { font-size: 32px; font-weight: 900; color: #000; }
+        .tag-title { font-size: 17px; font-weight: 800; line-height: 1.3; color: #000; }
+        .tag-sn { font-size: 30px; font-weight: 900; color: #000; }
 
-        /* 頁尾資訊：緊貼底部，不佔用額外垂直空間 */
         .footer { 
             padding-bottom: calc(10px + env(safe-area-inset-bottom)); 
             text-align: center; 
-            font-size: 16px; 
+            font-size: 15px; 
             color: #000; 
             line-height: 1.4;
         }
@@ -122,21 +122,17 @@
 
     <div class="main-wrapper">
         <div class="ios-info">iOS:18.7.2</div>
-
         <div class="content">
             <p class="status">已上鎖，可進入此管制營區</p>
             <h1 class="location">左營 18</h1>
-            <div class="clock" id="time">12/19 15:42:05</div>
-            
+            <div class="clock" id="time">--/-- --:--:--</div>
             <div class="btn"><span class="dot g"></span> 上鎖：進入管制模式</div>
             <div class="btn"><span class="dot r"></span> 解鎖：離開管制模式</div>
-            
             <div class="tag-box">
                 <p class="tag-title">國軍營內民用通信<br>資訊器材管制標籤</p>
                 <p class="tag-sn">C228968404</p>
             </div>
         </div>
-
         <div class="footer">
             <p id="lock">上鎖時間：114/12/19 07:31:41</p>
             <p>設定檔：V1.03 (08/14 10:00:07)</p>
@@ -145,11 +141,8 @@
     </div>
 
     <script>
-        // 強制禁止捲動手勢
         document.addEventListener('touchmove', function(e) {
-            if (e.touches.length > 1 || !window.visualViewport) {
-                e.preventDefault();
-            }
+            if (e.touches.length > 1) e.preventDefault();
         }, { passive: false });
 
         function up(){
