@@ -6,83 +6,127 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, system-ui, sans-serif; }
-        
-        /* 將底層設為黑色，確保瀏海區是黑色 */
+        /* 強制鎖定螢幕比例，禁止溢出 */
         html, body { 
             background-color: #000000; 
-            height: 100vh; 
-            width: 100vw;
+            height: 100%; 
+            width: 100%;
             overflow: hidden; 
+            position: fixed;
+            margin: 0;
+            padding: 0;
         }
 
-        /* 內容區塊才放綠色背景 */
-        .main-wrapper {
-            background-color: #4CD137;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            margin-top: env(safe-area-inset-top); /* 從瀏海下方開始顯示內容 */
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+            font-family: -apple-system, "SF Pro Text", system-ui, sans-serif; 
         }
 
-        /* 頂部導覽列（黑條） */
+        /* 縮減黑欄高度：只保留必要的高度，避免擠壓下方空間 */
         .header {
             background-color: #000000;
             color: #ffffff;
-            height: 50px;
+            /* 將 padding-top 限制在安全區域，height 設為極小值 */
+            padding-top: env(safe-area-inset-top);
+            height: 40px; 
             width: 100%;
             display: flex;
             align-items: center;
             justify-content: center;
             position: relative;
-            z-index: 999;
+            z-index: 100;
         }
 
-        /* 讓黑條往上延伸覆蓋狀態列 */
-        .header::before {
-            content: "";
-            position: absolute;
-            top: -100px; /* 向上延伸 100px 確保填滿 */
-            left: 0;
-            right: 0;
-            height: 100px;
-            background-color: #000000;
+        .menu-icon { position: absolute; left: 18px; font-size: 20px; bottom: 10px; }
+        .header-title { font-size: 18px; font-weight: bold; position: absolute; bottom: 10px; }
+
+        /* 主容器：高度精確計算為 100% 減去黑欄高度 */
+        .main-wrapper {
+            background-color: #4CD137;
+            height: calc(100% - 40px - env(safe-area-inset-top));
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden; /* 確保內部元件不會撐開高度 */
         }
 
-        .menu-icon { position: absolute; left: 18px; font-size: 24px; }
-        .ios-info { position: absolute; right: 15px; bottom: 8px; font-size: 13px; font-weight: 300; }
-        .header-title { font-size: 19px; font-weight: bold; }
+        .ios-info { 
+            position: absolute; 
+            right: 10px; 
+            top: 5px; 
+            font-size: 13px; 
+            color: #000;
+            z-index: 20;
+        }
 
-        .content { flex: 1; display: flex; flex-direction: column; align-items: center; padding-top: 30px; }
-        .status { font-size: 16px; margin-bottom: 25px; color: #111; }
-        .location { font-size: 82px; font-weight: 500; margin-bottom: 45px; color: #000; letter-spacing: -2px; }
-        .clock { font-size: 44px; font-weight: 700; margin-bottom: 35px; color: #000; }
+        /* 內容區塊間距微調，確保所有元件都能在一個畫面內顯示 */
+        .content { 
+            flex: 1; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            padding-top: 25px; 
+        }
 
-        .btn { width: 88%; height: 50px; background: rgba(255,255,255,0.3); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 16px; color: #2c5697; font-weight: 600; font-size: 19px; }
-        .dot { width: 11px; height: 11px; border-radius: 50%; margin-right: 12px; }
-        .g { background: #00FF00; box-shadow: 0 0 8px #00FF00; }
-        .r { background: #FF0000; box-shadow: 0 0 8px #FF0000; }
+        .status { font-size: 15px; margin-bottom: 15px; color: #000; }
+        .location { font-size: 76px; font-weight: 500; margin-bottom: 25px; color: #000; letter-spacing: -2px; line-height: 1; }
+        .clock { font-size: 40px; font-weight: 700; margin-bottom: 25px; color: #000; }
 
-        .tag-box { width: 82%; background: #fff; border-radius: 20px; padding: 22px; margin-top: 15px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-        .tag-title { font-size: 20px; font-weight: 800; line-height: 1.4; color: #000; }
-        .tag-sn { font-size: 38px; font-weight: 900; margin-top: 5px; color: #000; font-family: Arial, sans-serif; }
+        .btn { 
+            width: 86%; 
+            height: 46px; 
+            background: rgba(255,255,255,0.3); 
+            border-radius: 12px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            margin-bottom: 12px; 
+            color: #2c5697; 
+            font-weight: 600; 
+            font-size: 18px; 
+        }
+        .dot { width: 10px; height: 10px; border-radius: 50%; margin-right: 12px; }
+        .g { background: #00FF00; box-shadow: 0 0 5px #00FF00; }
+        .r { background: #FF0000; box-shadow: 0 0 5px #FF0000; }
 
-        .footer { padding-bottom: calc(20px + env(safe-area-inset-bottom)); text-align: center; line-height: 1.8; font-size: 17px; color: #000; }
-        .warning { color: #d63031; font-weight: 900; letter-spacing: 6px; margin-top: 5px; font-size: 19px; }
+        .tag-box { 
+            width: 80%; 
+            background: #fff; 
+            border-radius: 18px; 
+            padding: 15px; 
+            margin-top: 5px; 
+            text-align: center; 
+        }
+        .tag-title { font-size: 18px; font-weight: 800; line-height: 1.3; color: #000; }
+        .tag-sn { font-size: 32px; font-weight: 900; color: #000; }
+
+        /* 頁尾資訊：緊貼底部，不佔用額外垂直空間 */
+        .footer { 
+            padding-bottom: calc(10px + env(safe-area-inset-bottom)); 
+            text-align: center; 
+            font-size: 16px; 
+            color: #000; 
+            line-height: 1.4;
+        }
+        .warning { color: #d63031; font-weight: 900; letter-spacing: 5px; font-size: 18px; }
     </style>
 </head>
 <body>
     <div class="header">
         <div class="menu-icon">☰</div>
         <div class="header-title">國軍 MDM V8.1</div>
-        <div class="ios-info">iOS:18.7.2</div>
     </div>
 
     <div class="main-wrapper">
+        <div class="ios-info">iOS:18.7.2</div>
+
         <div class="content">
             <p class="status">已上鎖，可進入此管制營區</p>
             <h1 class="location">左營 18</h1>
-            <div class="clock" id="time">12/19 09:32:00</div>
+            <div class="clock" id="time">12/19 15:42:05</div>
             
             <div class="btn"><span class="dot g"></span> 上鎖：進入管制模式</div>
             <div class="btn"><span class="dot r"></span> 解鎖：離開管制模式</div>
@@ -101,6 +145,13 @@
     </div>
 
     <script>
+        // 強制禁止捲動手勢
+        document.addEventListener('touchmove', function(e) {
+            if (e.touches.length > 1 || !window.visualViewport) {
+                e.preventDefault();
+            }
+        }, { passive: false });
+
         function up(){
             let d = new Date();
             let m = (d.getMonth()+1).toString().padStart(2,'0');
