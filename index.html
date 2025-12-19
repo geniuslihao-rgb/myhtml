@@ -2,31 +2,18 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-
-    <!-- 關鍵：iOS Web App 滿版設定 -->
-    <meta name="viewport"
-          content="width=device-width,
-                   initial-scale=1.0,
-                   maximum-scale=1.0,
-                   user-scalable=no,
-                   viewport-fit=cover">
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-
     <title>MDM V8.1</title>
-
     <style>
-        /* =========================
-           全域：完全鎖死畫面
-        ========================= */
         html, body {
             margin: 0;
             padding: 0;
             width: 100%;
             height: 100%;
-            overflow: hidden;               /* 禁止上下滑動 */
-            background-color: #4CD137;      /* 最外層就是綠色，永不露黑 */
+            overflow: hidden;
+            background-color: #4CD137;
             font-family: -apple-system, BlinkMacSystemFont, sans-serif;
         }
 
@@ -36,46 +23,34 @@
             -webkit-user-select: none;
         }
 
-        /* =========================
-           Header（不佔版面高度）
-        ========================= */
         .header {
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
-
             height: calc(44px + env(safe-area-inset-top));
             padding-top: env(safe-area-inset-top);
-
             background-color: #000;
             color: #fff;
-
             display: flex;
             align-items: center;
             justify-content: center;
-
             font-size: 17px;
             font-weight: 600;
             z-index: 100;
         }
 
-        /* =========================
-           主畫面容器（關鍵）
-        ========================= */
         .main-wrapper {
             position: fixed;
-            inset: 0;                       /* 直接鎖定實體畫面 */
+            inset: 0;
             background-color: #4CD137;
-
             display: flex;
             flex-direction: column;
             align-items: center;
-
             padding-top: calc(44px + env(safe-area-inset-top));
-            padding-bottom: env(safe-area-inset-bottom);
-
-            overflow: hidden;               /* 再次保險 */
+            /* 移除這裡的 padding-bottom，讓內容可以真正到底 */
+            padding-bottom: 0;
+            overflow: hidden;
         }
 
         .ios-info {
@@ -98,25 +73,22 @@
             margin: 5px 0;
         }
 
-        /* =========================
-           底部內容區
-        ========================= */
+        /* 修改：讓底部容器緊貼物理邊界 */
         .bottom-container {
             margin-top: auto;
             width: 100%;
-
             display: flex;
             flex-direction: column;
             align-items: center;
-
-            padding-bottom: 8px;
+            /* 僅保留系統手勢條的最小安全距離，確保文字不被遮擋 */
+            padding-bottom: calc(5px + env(safe-area-inset-bottom));
         }
 
         .clock {
             font-size: 42px;
             font-weight: 700;
             font-variant-numeric: tabular-nums;
-            margin-bottom: 12px;
+            margin-bottom: 8px; /* 縮小一點間距 */
         }
 
         .btn {
@@ -124,12 +96,10 @@
             height: 48px;
             background: rgba(255, 255, 255, 0.28);
             border-radius: 15px;
-
             display: flex;
             align-items: center;
             justify-content: center;
-
-            margin-bottom: 10px;
+            margin-bottom: 8px; /* 縮小按鈕間距 */
             color: #2c5697;
             font-weight: 600;
             font-size: 18px;
@@ -152,7 +122,7 @@
             background-size: contain;
             background-repeat: no-repeat;
             background-position: center;
-            margin-bottom: 10px;
+            margin-bottom: 5px; /* 縮小標籤與下方的距離 */
         }
 
         .footer {
@@ -163,8 +133,8 @@
         }
 
         .footer p {
-            margin: 2px 0;
-            line-height: 1.2;
+            margin: 1px 0; /* 極大化壓縮行間距 */
+            line-height: 1.1;
         }
 
         .warning {
@@ -172,11 +142,10 @@
             font-weight: 900;
             font-size: 18px;
             letter-spacing: 4px;
-            margin-top: 4px;
+            margin-top: 2px !important;
         }
     </style>
 </head>
-
 <body>
 
     <div class="header">國軍 MDM V8.1</div>
@@ -214,17 +183,13 @@
             const min = String(d.getMinutes()).padStart(2, '0');
             const s = String(d.getSeconds()).padStart(2, '0');
 
-            document.getElementById('time').innerText =
-                `${m}/${day} ${h}:${min}:${s}`;
+            document.getElementById('time').innerText = `${m}/${day} ${h}:${min}:${s}`;
 
             const roc = d.getFullYear() - 1911;
-            document.getElementById('lockDate').innerText =
-                `上鎖時間：${roc}/12/19 07:31:41`;
+            document.getElementById('lockDate').innerText = `上鎖時間：${roc}/12/19 07:31:41`;
         }
-
         setInterval(updateTime, 1000);
         updateTime();
     </script>
-
 </body>
 </html>
