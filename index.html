@@ -6,6 +6,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <style>
+        /* 移除所有可能導致黑邊的間距 */
         html, body { 
             background-color: #000000; 
             height: 100%; 
@@ -27,9 +28,10 @@
             display: flex; align-items: center; justify-content: center;
             color: #fff; font-size: 17px; font-weight: 600;
             flex-shrink: 0;
+            z-index: 10;
         }
 
-        /* 修改：讓綠色背景延伸到最底部 */
+        /* 修改：確保 main-wrapper 填滿所有剩餘高度，不留邊隙 */
         .main-wrapper {
             background-color: #4CD137;
             flex-grow: 1; 
@@ -38,8 +40,8 @@
             align-items: center;
             position: relative;
             width: 100%;
-            /* 確保底部有安全距離預留給手勢條 */
-            padding-bottom: env(safe-area-inset-bottom);
+            margin: 0;
+            /* 移除 padding-bottom 以防止顯示 body 的黑色背景 */
         }
 
         .ios-info { position: absolute; right: 12px; top: 8px; font-size: 14px; }
@@ -47,13 +49,15 @@
         .top-group { text-align: center; padding-top: 25px; flex-shrink: 0; }
         .location { font-size: 82px; font-weight: 500; line-height: 1; margin: 5px 0; }
         
-        /* 核心修改：建立一個包裹容器，把所有要下移的內容包在一起 */
+        /* 底部整塊容器 */
         .bottom-container {
-            margin-top: auto; /* 關鍵：這會把整個容器推到最底部 */
+            margin-top: auto; 
             width: 100%;
             display: flex;
             flex-direction: column;
             align-items: center;
+            /* 這裡使用 padding-bottom 來留出底部手勢條的空間，但背景仍會是綠色 */
+            padding-bottom: calc(10px + env(safe-area-inset-bottom));
         }
 
         .clock { 
@@ -87,7 +91,6 @@
             font-size: 16px; 
             font-weight: 500; 
             width: 100%;
-            padding-bottom: 10px; /* 這裡調整與最底部的距離 */
         }
 
         .footer p { margin: 2px 0; line-height: 1.2; }
