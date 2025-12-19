@@ -32,7 +32,7 @@ html, body {
     user-select: none;
 }
 
-/* Header */
+/* ===== Header ===== */
 .header {
     position: fixed;
     top: 0;
@@ -47,35 +47,37 @@ html, body {
     justify-content: center;
     font-size: 17px;
     font-weight: 600;
-    z-index: 100;
+    z-index: 10;
 }
 
-/* 主容器 */
-.main-wrapper {
+/* ===== 主結構 ===== */
+.app {
     position: fixed;
     inset: 0;
     height: 100dvh;
-    background: #4CD137;
     padding-top: calc(44px + env(safe-area-inset-top));
+    background: #4CD137;
+
+    display: flex;
+    flex-direction: column;
 }
 
-/* 上方提示文字 */
+/* 上方提示 */
 .top-area {
     text-align: center;
-    padding-top: 18px;
-}
-
-.top-area p {
-    margin: 0;
+    padding: 18px 0 8px;
     font-size: 14px;
 }
 
-/* ===== 中間區域（左營18） ===== */
-.middle-area {
-    text-align: center;
-    margin-top: 22px;
+/* ===== 中間撐滿區 ===== */
+.center-area {
+    flex: 1;                     /* 關鍵：吃掉中間所有空間 */
+    display: flex;
+    align-items: center;         /* 垂直置中 */
+    justify-content: center;
 }
 
+/* 左營 18 */
 .location {
     font-size: 86px;
     font-weight: 600;
@@ -83,11 +85,7 @@ html, body {
 }
 
 /* ===== 底部群組 ===== */
-.bottom-container {
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
+.bottom-area {
     padding-bottom: env(safe-area-inset-bottom);
     display: flex;
     flex-direction: column;
@@ -97,7 +95,7 @@ html, body {
 .clock {
     font-size: 42px;
     font-weight: 800;
-    margin-bottom: 8px;
+    margin-bottom: 10px;
 }
 
 .btn {
@@ -154,17 +152,17 @@ html, body {
 
 <div class="header">國軍 MDM V8.1</div>
 
-<div class="main-wrapper">
+<div class="app">
 
     <div class="top-area">
-        <p>已上鎖，可進入此管制營區</p>
+        已上鎖，可進入此管制營區
     </div>
 
-    <div class="middle-area">
+    <div class="center-area">
         <div class="location">左營 18</div>
     </div>
 
-    <div class="bottom-container">
+    <div class="bottom-area">
         <div class="clock" id="time">--/-- --:--:--</div>
 
         <div class="btn"><span class="dot g"></span>上鎖：進入管制模式</div>
@@ -173,7 +171,7 @@ html, body {
         <div class="tag-box"></div>
 
         <div class="footer">
-            <p id="lockDate">上鎖時間：114/12/19 07:31:41</p>
+            <p>上鎖時間：114/12/19 07:31:41</p>
             <p>設定檔：V1.03 (08/14 10:00:07)</p>
             <p class="warning">仿 冒 必 究</p>
         </div>
