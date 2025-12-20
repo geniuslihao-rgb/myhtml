@@ -10,8 +10,11 @@
                user-scalable=no,
                viewport-fit=cover">
 
+<meta name="apple-mobile-web-app-title" content="MDM">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+<link rel="apple-touch-icon" href="icon.png">
 
 <title>MDM V8.1</title>
 
@@ -54,7 +57,6 @@ html, body {
 .menu-icon {
     position: absolute;
     left: 15px;
-    /* 讓圖案在黑色區域內垂直居中 (考慮到 iPhone 安全區域) */
     bottom: 13px; 
     display: flex;
     flex-direction: column;
@@ -70,12 +72,11 @@ html, body {
 /* ===== IOS 版本號 (黑色欄位右下方綠色區域) ===== */
 .ios-version {
     position: fixed;
-    /* 剛好在 header 高度之下 */
     top: calc(46px + env(safe-area-inset-top)); 
     right: 12px;
     font-size: 13px;
     font-weight: 500;
-    color: #000; /* 黑色字體 */
+    color: #000;
     z-index: 5;
 }
 
