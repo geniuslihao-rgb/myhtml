@@ -53,7 +53,6 @@ html, body {
     z-index: 10;
 }
 
-/* 左側選單圖案 (三條線) */
 .menu-icon {
     position: absolute;
     left: 15px;
@@ -69,7 +68,6 @@ html, body {
     background-color: white;
 }
 
-/* ===== IOS 版本號 (黑色欄位右下方綠色區域) ===== */
 .ios-version {
     position: fixed;
     top: calc(46px + env(safe-area-inset-top)); 
@@ -82,29 +80,32 @@ html, body {
 
 /* ===== 主結構 ===== */
 .app {
-    position: fixed;
-    inset: 0;
-    height: 100dvh;
-    padding-top: calc(44px + env(safe-area-inset-top));
+    position: relative; /* 改為 relative，讓內部的 absolute 元素參考此範圍 */
+    width: 100%;
+    height: 100dvh; /* 使用 dynamic viewport height 確保滿版 */
     background: #4CD137;
-    display: flex;
-    flex-direction: column;
+    /* 移除原本的 flex 設定，因為我们要手動定位上下 */
 }
 
 .top-area {
+    /* 固定在頂部 */
+    position: absolute;
+    top: calc(44px + env(safe-area-inset-top));
+    left: 0;
+    right: 0;
     text-align: center;
     padding: 18px 0 8px;
     font-size: 14px;
 }
 
 .center-area {
-    /* 這裡設為 flex: 1 會自動佔滿中間剩餘空間，把 bottom-area 往下推 */
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    /* 如果覺得地點文字太中間，可以透過 padding-bottom 再把它往上推一點，讓下面空間更大 */
-    padding-bottom: 40px; 
+    /* 讓它絕對置中 */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -60%); /* -60% 是為了視覺上稍微偏上，避開底部內容 */
+    width: 100%;
+    text-align: center;
 }
 
 .location {
@@ -113,21 +114,31 @@ html, body {
     line-height: 1;
 }
 
+/* ===== 底部區域 (關鍵修改) ===== */
 .bottom-area {
-    /* 這裡控制底部區域 */
+    position: absolute; /* 強制固定在底部 */
+    bottom: 0;
+    left: 0;
+    right: 0;
+    
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: flex-end;
-    /* env(safe-area-inset-bottom) 是為了避開那條橫線，這裡設為剛好貼齊 */
+    
+    /* 這裡使用 padding-bottom 來處理安全區域 */
+    /* 這樣 '仿冒必究' 就會貼在手勢條(Home Indicator)的正上方 */
     padding-bottom: env(safe-area-inset-bottom);
+    
+    /* 為了保險，如果 env 不支援或為 0，給一個最小距離以免貼底太難看 */
+    padding-bottom: max(env(safe-area-inset-bottom), 10px);
+    
     width: 100%;
+    z-index: 20;
 }
 
 .clock {
     font-size: 42px;
     font-weight: 800;
-    /* 減少間距，讓它更靠近下面的按鈕 */
     margin-bottom: 5px; 
 }
 
@@ -139,7 +150,6 @@ html, body {
     display: flex;
     align-items: center;
     justify-content: center;
-    /* 減少按鈕之間的間距 */
     margin-bottom: 6px; 
     font-size: 17px;
     font-weight: 600;
@@ -156,20 +166,17 @@ html, body {
 .r { background:#FF0000; box-shadow:0 0 6px #FF0000; }
 
 .tag-box {
-    /* 稍微縮小圖片寬度，避免在大螢幕手機上佔據太高空間導致整體上浮 */
     width: 75%;
     aspect-ratio: 2.1 / 1;
     background: url('tag.png') center/contain no-repeat;
-    /* 減少圖片下方的留白 */
-    margin-bottom: 2px; 
+    margin-bottom: 0px; /* 移除圖片下方的 margin，讓它貼近 footer */
 }
 
 .footer {
     text-align: center;
     font-size: 15px;
     line-height: 1.15;
-    /* 確保 footer 緊貼底部安全區域 */
-    margin-bottom: 2px;
+    margin-bottom: 0; /* 移除 footer 額外的下邊距 */
 }
 
 .footer p {
@@ -182,6 +189,7 @@ html, body {
     font-weight: 900;
     letter-spacing: 4px;
     color: #d63031;
+    /* 這是最後一行字，它下面只有 safe-area 的 padding */
 }
 </style>
 </head>
