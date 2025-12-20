@@ -98,10 +98,13 @@ html, body {
 }
 
 .center-area {
+    /* 這裡設為 flex: 1 會自動佔滿中間剩餘空間，把 bottom-area 往下推 */
     flex: 1;
     display: flex;
     align-items: center;
     justify-content: center;
+    /* 如果覺得地點文字太中間，可以透過 padding-bottom 再把它往上推一點，讓下面空間更大 */
+    padding-bottom: 40px; 
 }
 
 .location {
@@ -111,16 +114,21 @@ html, body {
 }
 
 .bottom-area {
-    padding-bottom: env(safe-area-inset-bottom);
+    /* 這裡控制底部區域 */
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: flex-end;
+    /* env(safe-area-inset-bottom) 是為了避開那條橫線，這裡設為剛好貼齊 */
+    padding-bottom: env(safe-area-inset-bottom);
+    width: 100%;
 }
 
 .clock {
     font-size: 42px;
     font-weight: 800;
-    margin-bottom: 10px;
+    /* 減少間距，讓它更靠近下面的按鈕 */
+    margin-bottom: 5px; 
 }
 
 .btn {
@@ -131,7 +139,8 @@ html, body {
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: 8px;
+    /* 減少按鈕之間的間距 */
+    margin-bottom: 6px; 
     font-size: 17px;
     font-weight: 600;
     color: #2c5697;
@@ -147,16 +156,20 @@ html, body {
 .r { background:#FF0000; box-shadow:0 0 6px #FF0000; }
 
 .tag-box {
-    width: 80%;
+    /* 稍微縮小圖片寬度，避免在大螢幕手機上佔據太高空間導致整體上浮 */
+    width: 75%;
     aspect-ratio: 2.1 / 1;
     background: url('tag.png') center/contain no-repeat;
-    margin-bottom: 6px;
+    /* 減少圖片下方的留白 */
+    margin-bottom: 2px; 
 }
 
 .footer {
     text-align: center;
     font-size: 15px;
     line-height: 1.15;
+    /* 確保 footer 緊貼底部安全區域 */
+    margin-bottom: 2px;
 }
 
 .footer p {
@@ -164,7 +177,7 @@ html, body {
 }
 
 .warning {
-    margin-top: 4px;
+    margin-top: 2px;
     font-size: 17px;
     font-weight: 900;
     letter-spacing: 4px;
