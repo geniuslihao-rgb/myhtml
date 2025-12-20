@@ -84,7 +84,7 @@ html, body {
 .app {
     position: fixed;
     inset: 0;
-    height: 100dvh;
+    height: 100dvh; /* 使用 dvh 確保填滿可視高度 */
     padding-top: calc(44px + env(safe-area-inset-top));
     background: #4CD137;
     display: flex;
@@ -98,7 +98,7 @@ html, body {
 }
 
 .center-area {
-    flex: 1;
+    flex: 1; /* 佔據剩餘空間，將下方區塊往下推 */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -108,13 +108,19 @@ html, body {
     font-size: 86px;
     font-weight: 600;
     line-height: 1;
+    /* 這裡可以視情況加上 padding-bottom 來微調位置，目前保持置中 */
 }
 
+/* 修改重點：底部區域 */
 .bottom-area {
-    padding-bottom: env(safe-area-inset-bottom);
+    /* 原本是 env(safe-area-inset-bottom)，會留白太多 */
+    /* 改為 8px，讓文字直接貼近手勢條 */
+    padding-bottom: 8px; 
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: flex-end; /* 強制靠底 */
+    width: 100%;
 }
 
 .clock {
@@ -169,6 +175,8 @@ html, body {
     font-weight: 900;
     letter-spacing: 4px;
     color: #d63031;
+    /* 確保這行字貼近底部邊緣，不留多餘邊距 */
+    margin-bottom: 0; 
 }
 </style>
 </head>
