@@ -124,14 +124,20 @@ html, body {
 }
 
 .side-menu {
-    position: absolute;
+    position: fixed;
     top: 0;
     left: -85%;
     width: 85%;
-    height: 100%; /* 從最頂端到底部 */
+
+    /* 關鍵修正 */
+    height: 100dvh;
+    padding-bottom: env(safe-area-inset-bottom);
+
     background: #FFF;
     transition: left 0.3s ease-out;
     overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+
     pointer-events: auto;
     box-shadow: 2px 0 10px rgba(0,0,0,0.2);
 }
