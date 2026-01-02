@@ -2,21 +2,11 @@
 <html lang="zh-TW">
 <head>
 <meta charset="UTF-8">
-
-<meta name="viewport"
-      content="width=device-width,
-               initial-scale=1.0,
-               maximum-scale=1.0,
-               user-scalable=no,
-               viewport-fit=cover">
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-title" content="MDM">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-
-<link rel="apple-touch-icon" href="icon.png">
-
-<title>MDM V8.1</title>
+<title>國軍 MDM V8.1</title>
 
 <style>
 html, body {
@@ -35,12 +25,10 @@ html, body {
     user-select: none;
 }
 
-/* ===== Header (黑色欄位) ===== */
+/* ===== Header ===== */
 .header {
     position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
+    top: 0; left: 0; right: 0;
     height: calc(44px + env(safe-area-inset-top));
     padding-top: env(safe-area-inset-top);
     background: #000;
@@ -53,11 +41,10 @@ html, body {
     z-index: 10;
 }
 
-/* 左側選單圖案 (三條線) */
 .menu-icon {
     position: absolute;
     left: 15px;
-    bottom: 13px; 
+    bottom: 13px;
     display: flex;
     flex-direction: column;
     gap: 4px;
@@ -69,10 +56,9 @@ html, body {
     background-color: white;
 }
 
-/* ===== IOS 版本號 (黑色欄位右下方綠色區域) ===== */
 .ios-version {
     position: fixed;
-    top: calc(46px + env(safe-area-inset-top)); 
+    top: calc(46px + env(safe-area-inset-top));
     right: 12px;
     font-size: 13px;
     font-weight: 500;
@@ -84,7 +70,7 @@ html, body {
 .app {
     position: fixed;
     inset: 0;
-    height: 100dvh; /* 使用 dvh 確保填滿可視高度 */
+    height: 100dvh;
     padding-top: calc(44px + env(safe-area-inset-top));
     background: #4CD137;
     display: flex;
@@ -98,7 +84,7 @@ html, body {
 }
 
 .center-area {
-    flex: 1; /* 佔據剩餘空間，將下方區塊往下推 */
+    flex: 1;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -107,19 +93,14 @@ html, body {
 .location {
     font-size: 80px;
     font-weight: 400;
-    line-height: 1;
-    /* 這裡可以視情況加上 padding-bottom 來微調位置，目前保持置中 */
 }
 
-/* 修改重點：底部區域 */
 .bottom-area {
-    /* 原本是 env(safe-area-inset-bottom)，會留白太多 */
-    /* 改為 8px，讓文字直接貼近手勢條 */
-    padding-bottom: 8px; 
+    padding-bottom: 8px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: flex-end; /* 強制靠底 */
+    justify-content: flex-end;
     width: 100%;
 }
 
@@ -141,6 +122,7 @@ html, body {
     font-size: 21px;
     font-weight: 500;
     color: #007AFF;
+    cursor: pointer;
 }
 
 .dot {
@@ -155,7 +137,7 @@ html, body {
 .tag-box {
     width: 80%;
     aspect-ratio: 2.1 / 1;
-    background: url('tag.png') center/contain no-repeat;
+    background: #ccc; /* 預設底色，如有圖片請換回 url */
     margin-bottom: 6px;
 }
 
@@ -165,9 +147,7 @@ html, body {
     line-height: 1.15;
 }
 
-.footer p {
-    margin: 3px 0;
-}
+.footer p { margin: 3px 0; }
 
 .warning {
     margin-top: 4px;
@@ -175,8 +155,62 @@ html, body {
     font-weight: 900;
     letter-spacing: 4px;
     color: #d63031;
-    /* 確保這行字貼近底部邊緣，不留多餘邊距 */
-    margin-bottom: 0; 
+    margin-bottom: 0;
+}
+
+/* ===== 彈出視窗樣式 (Modal) ===== */
+.modal-overlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.4);
+    display: none; /* 初始隱藏 */
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+}
+
+.modal-content {
+    width: 270px;
+    background: #E8F5E9; /* 淺綠色背景 */
+    border-radius: 14px;
+    text-align: center;
+    overflow: hidden;
+}
+
+.modal-header {
+    padding: 20px 16px 4px;
+    font-size: 17px;
+    font-weight: 600;
+    color: #000;
+}
+
+.modal-body {
+    padding: 0 16px 20px;
+    font-size: 13px;
+    line-height: 1.4;
+    color: #000;
+}
+
+.modal-footer {
+    display: flex;
+    flex-direction: column;
+}
+
+.modal-btn {
+    padding: 12px 0;
+    font-size: 17px;
+    color: #007AFF;
+    border-top: 0.5px solid rgba(0, 0, 0, 0.15);
+    cursor: pointer;
+}
+
+.modal-btn:active {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+.cancel-btn {
+    font-weight: 600;
 }
 </style>
 </head>
@@ -195,9 +229,7 @@ html, body {
 <div class="ios-version">IOS:18.7.2</div>
 
 <div class="app">
-    <div class="top-area">
-        已上鎖，可進入此管制營區
-    </div>
+    <div class="top-area">已上鎖，可進入此管制營區</div>
 
     <div class="center-area">
         <div class="location">左營 18</div>
@@ -206,7 +238,7 @@ html, body {
     <div class="bottom-area">
         <div class="clock" id="time">--/-- --:--:--</div>
 
-        <div class="btn"><span class="dot g"></span>上鎖：進入管制模式</div>
+        <div class="btn" onclick="openModal()"><span class="dot g"></span>上鎖：進入管制模式</div>
         <div class="btn"><span class="dot r"></span>解鎖：離開管制模式</div>
 
         <div class="tag-box"></div>
@@ -219,7 +251,22 @@ html, body {
     </div>
 </div>
 
+<div id="modalOverlay" class="modal-overlay">
+    <div class="modal-content">
+        <div class="modal-header">版本檢查 (民網)</div>
+        <div class="modal-body">
+            已 46 天未檢查 MDM 版本，<br>現在要執行民網版本檢查嗎？
+        </div>
+        <div class="modal-footer">
+            <div class="modal-btn" onclick="closeModal()">版本檢查</div>
+            <div class="modal-btn" onclick="closeModal()">略過檢查 (直接上鎖)</div>
+            <div class="modal-btn cancel-btn" onclick="closeModal()">取 消</div>
+        </div>
+    </div>
+</div>
+
 <script>
+// 更新即時時間
 function updateTime(){
     const d=new Date();
     const m=String(d.getMonth()+1).padStart(2,'0');
@@ -227,11 +274,20 @@ function updateTime(){
     const h=String(d.getHours()).padStart(2,'0');
     const min=String(d.getMinutes()).padStart(2,'0');
     const s=String(d.getSeconds()).padStart(2,'0');
-    document.getElementById('time').innerText =
-        `${m}/${day} ${h}:${min}:${s}`;
+    document.getElementById('time').innerText = `${m}/${day} ${h}:${min}:${s}`;
 }
 setInterval(updateTime,1000);
 updateTime();
+
+// 控制 Modal 顯示
+function openModal() {
+    document.getElementById('modalOverlay').style.display = 'flex';
+}
+
+// 控制 Modal 隱藏
+function closeModal() {
+    document.getElementById('modalOverlay').style.display = 'none';
+}
 </script>
 
 </body>
