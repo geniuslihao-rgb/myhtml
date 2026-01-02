@@ -134,10 +134,11 @@ html, body {
 .g { background:#00FF00;}
 .r { background:#FF0000;}
 
+/* ===== 浮水印設定 ===== */
 .tag-box {
     width: 80%;
     aspect-ratio: 2.1 / 1;
-    background: #ccc; /* 預設底色，如有圖片請換回 url */
+    background: url('tag.png') center/contain no-repeat;
     margin-bottom: 6px;
 }
 
@@ -158,13 +159,13 @@ html, body {
     margin-bottom: 0;
 }
 
-/* ===== 彈出視窗樣式 (Modal) ===== */
+/* ===== 彈出視窗樣式 (修正版) ===== */
 .modal-overlay {
     position: fixed;
     top: 0; left: 0;
     width: 100%; height: 100%;
-    background: rgba(0, 0, 0, 0.4);
-    display: none; /* 初始隱藏 */
+    background: transparent; /* 移除背景遮罩變暗效果 */
+    display: none;
     justify-content: center;
     align-items: center;
     z-index: 100;
@@ -172,21 +173,22 @@ html, body {
 
 .modal-content {
     width: 270px;
-    background: #E8F5E9; /* 淺綠色背景 */
+    background: #E2EEE2; /* 修正顏色：微調後的淺綠灰色 */
     border-radius: 14px;
     text-align: center;
     overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15); /* 增加陰影使其立體，取代背景變暗 */
 }
 
 .modal-header {
-    padding: 20px 16px 4px;
+    padding: 22px 16px 6px;
     font-size: 17px;
     font-weight: 600;
     color: #000;
 }
 
 .modal-body {
-    padding: 0 16px 20px;
+    padding: 0 20px 22px;
     font-size: 13px;
     line-height: 1.4;
     color: #000;
@@ -201,7 +203,7 @@ html, body {
     padding: 12px 0;
     font-size: 17px;
     color: #007AFF;
-    border-top: 0.5px solid rgba(0, 0, 0, 0.15);
+    border-top: 0.5px solid rgba(0, 0, 0, 0.1); /* 調整線條透明度 */
     cursor: pointer;
 }
 
@@ -244,7 +246,7 @@ html, body {
         <div class="tag-box"></div>
 
         <div class="footer">
-            <p>上鎖時間：114/12/29 07:31:41</p>
+            <p>上鎖時間：115/01/02 18:24:05</p>
             <p>設定檔：V1.03 (08/14 10:00:07)</p>
             <p class="warning">仿 冒 必 究</p>
         </div>
@@ -266,7 +268,6 @@ html, body {
 </div>
 
 <script>
-// 更新即時時間
 function updateTime(){
     const d=new Date();
     const m=String(d.getMonth()+1).padStart(2,'0');
@@ -279,12 +280,10 @@ function updateTime(){
 setInterval(updateTime,1000);
 updateTime();
 
-// 控制 Modal 顯示
 function openModal() {
     document.getElementById('modalOverlay').style.display = 'flex';
 }
 
-// 控制 Modal 隱藏
 function closeModal() {
     document.getElementById('modalOverlay').style.display = 'none';
 }
