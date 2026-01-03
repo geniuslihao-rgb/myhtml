@@ -2,7 +2,7 @@
 <html lang="zh-TW">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="apple-mobile-web-app-title" content="MDM">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -10,12 +10,12 @@
 <title>MDM V8.1</title>
 
 <style>
-/* ===== 基礎設定 ===== */
+/* ===== 根層（關鍵）===== */
 html, body {
     margin: 0;
     padding: 0;
     width: 100%;
-    height: 100%;
+    min-height: 100dvh;          /* 不能用 height:100% */
     overflow: hidden;
     background: #4CD137;
     font-family: -apple-system, BlinkMacSystemFont, sans-serif;
@@ -27,7 +27,7 @@ html, body {
     user-select: none;
 }
 
-/* ===== Header (黑色) ===== */
+/* ===== Header ===== */
 .header {
     position: fixed;
     top: 0; left: 0; right: 0;
@@ -46,79 +46,43 @@ html, body {
 .menu-icon {
     position: absolute;
     left: 15px;
-    bottom: 13px; 
+    bottom: 13px;
     display: flex;
     flex-direction: column;
     gap: 4px;
-    cursor: pointer;
 }
 
 .menu-line {
     width: 18px;
     height: 2px;
-    background-color: white;
+    background: #fff;
 }
 
-.ios-version {
-    position: fixed;
-    top: calc(46px + env(safe-area-inset-top)); 
-    right: 12px;
-    font-size: 13px;
-    font-weight: 500;
-    color: #000;
-    z-index: 5;
-}
-
-/* ===== 主頁面：確保排版不跑掉 ===== */
+/* ===== 主畫面 ===== */
 .app {
     position: fixed;
     inset: 0;
-    height: 100dvh; 
     padding-top: calc(44px + env(safe-area-inset-top));
     background: #4CD137;
     display: flex;
     flex-direction: column;
 }
 
-.top-area { text-align: center; padding: 18px 0 8px; font-size: 18px; }
-.center-area { flex: 1; display: flex; align-items: center; justify-content: center; }
-.location { font-size: 80px; font-weight: 400; line-height: 1; }
-
-.bottom-area {
-    padding-bottom: 8px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-end; 
-    width: 100%;
-}
-
-.clock { font-size: 36px; font-weight: 800; margin-bottom: 10px; }
-.btn {
-    width: 88%; height: 42px; background: rgba(255,255,255,0.28); border-radius: 16px;
-    display: flex; align-items: center; justify-content: center; margin-bottom: 20px;
-    font-size: 21px; font-weight: 500; color: #007AFF; cursor: pointer;
-}
-.dot { width: 13px; height: 13px; border-radius: 50%; margin-right: 10px; }
-.g { background:#00FF00;} .r { background:#FF0000;}
-
-.tag-box { width: 80%; aspect-ratio: 2.1 / 1; background: url('tag.png') center/contain no-repeat; margin-bottom: 6px; }
-.footer { text-align: center; font-size: 20px; line-height: 1.15; }
-.footer p { margin: 3px 0; }
-.warning { margin-top: 4px; font-size: 18px; font-weight: 900; letter-spacing: 4px; color: #d63031; }
-
-/* ===== 側邊選單：修正全螢幕覆蓋問題 ===== */
+/* ===== 側邊選單（重點修正區）===== */
 #sideMenuContainer {
     position: fixed;
-    inset: 0;
-    z-index: 100; /* 必須高於 Header */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100dvh;          /* 真實螢幕高度 */
+    background: #fff;       /* 吞掉 iOS 補出來的區域 */
+    z-index: 100;
     pointer-events: none;
 }
 
 .menu-overlay {
-    position: absolute;
+    position: fixed;
     inset: 0;
-    background: rgba(0,0,0,0.1); /* 稍微有點遮罩感，或改為 transparent */
     display: none;
     pointer-events: auto;
 }
@@ -128,52 +92,45 @@ html, body {
     top: 0;
     left: -85%;
     width: 85%;
-
-    /* 關鍵修正 */
     height: 100dvh;
     padding-bottom: env(safe-area-inset-bottom);
-
-    background: #FFF;
-    transition: left 0.3s ease-out;
+    background: #fff;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
-
-    pointer-events: auto;
+    transition: left 0.3s ease-out;
     box-shadow: 2px 0 10px rgba(0,0,0,0.2);
+    pointer-events: auto;
 }
 
 .menu-active .side-menu { left: 0; }
 .menu-active .menu-overlay { display: block; }
 
-/* 選單內排版校正 */
+/* ===== 選單內容 ===== */
 .menu-header {
     background: #34495E;
     color: #BDC3C7;
-    padding: calc(20px + env(safe-area-inset-top)) 15px 15px; /* 考慮到瀏海區 */
+    padding: calc(20px + env(safe-area-inset-top)) 15px 15px;
     font-size: 18px;
     font-weight: bold;
 }
 
-.menu-section { background: #4B5D70; color: #FFF; padding: 10px 15px; font-size: 15px; font-weight: 500; }
-.menu-item { background: #FFF; padding: 14px 20px; border-bottom: 0.5px solid #E0E0E0; font-size: 16px; color: #333; }
-.menu-item.disabled { color: #D0D0D0; }
+.menu-section {
+    background: #4B5D70;
+    color: #fff;
+    padding: 10px 15px;
+    font-size: 15px;
+}
 
-/* ===== 對話框 ===== */
-.modal-overlay {
-    position: fixed;
-    top: 0; left: 0; width: 100%; height: 100%;
-    background: transparent;
-    display: none;
-    justify-content: center;
-    align-items: center;
-    z-index: 110;
+.menu-item {
+    padding: 14px 20px;
+    border-bottom: 0.5px solid #e0e0e0;
+    font-size: 16px;
+    background: #fff;
 }
-.modal-content {
-    width: 270px; background: #E2EEE2; border-radius: 14px; text-align: center; overflow: hidden; box-shadow: 0 4px 25px rgba(0,0,0,0.2);
+
+.menu-item.disabled {
+    color: #cfcfcf;
 }
-.modal-header { padding: 22px 16px 6px; font-size: 17px; font-weight: 600; }
-.modal-body { padding: 0 20px 22px; font-size: 13px; line-height: 1.4; }
-.modal-btn { padding: 12px 0; font-size: 17px; color: #007AFF; border-top: 0.5px solid rgba(0, 0, 0, 0.1); cursor: pointer; }
 </style>
 </head>
 
@@ -188,98 +145,32 @@ html, body {
     國軍 MDM V8.1
 </div>
 
-<div class="ios-version">IOS:18.7.2</div>
-
-<div class="app">
-    <div class="top-area">已上鎖，可進入此管制營區</div>
-    <div class="center-area">
-        <div class="location">左營 18</div>
-    </div>
-    <div class="bottom-area">
-        <div class="clock" id="time">--/-- --:--:--</div>
-        <div class="btn" onclick="openModal('lock')"><span class="dot g"></span>上鎖：進入管制模式</div>
-        <div class="btn" onclick="openModal('unlock')"><span class="dot r"></span>解鎖：離開管制模式</div>
-        <div class="tag-box"></div>
-        <div class="footer">
-            <p>上鎖時間：115/01/02 18:24:05</p>
-            <p>設定檔：V1.03 (08/14 10:00:07)</p>
-            <p class="warning">仿 冒 必 究</p>
-        </div>
-    </div>
-</div>
+<div class="app"></div>
 
 <div id="sideMenuContainer">
     <div class="menu-overlay" onclick="toggleMenu()"></div>
     <div class="side-menu">
         <div class="menu-header">國軍MDM</div>
-        <div class="menu-section">上鎖</div>
-        <div class="menu-item">常駐營區</div>
-        <div class="menu-item">出差 (WiFi)</div>
-        <div class="menu-item disabled">出差 (QRCode)</div>
-        <div class="menu-item">近期到訪營區</div>
-        <div class="menu-item">船艦模式</div>
-        <div class="menu-item">任務模式</div>
-        <div class="menu-item disabled">轉換一般營區</div>
-        <div class="menu-section">解鎖</div>
-        <div class="menu-item disabled">定點解鎖</div>
-        <div class="menu-item">密碼解鎖</div>
-        <div class="menu-section">紀錄</div>
-        <div class="menu-item">查詢</div>
-        <div class="menu-item">上傳 (WiFi)</div>
         <div class="menu-section">註冊與版本檢查更新</div>
         <div class="menu-item">新版檢查 (WiFi)</div>
         <div class="menu-item">新版檢查 (民網)</div>
         <div class="menu-item">版本更新 (民網)</div>
         <div class="menu-item">更新 MDM 設定 (WiFi)</div>
         <div class="menu-item">註冊 (WiFi)</div>
-        <div class="menu-section">設定</div>
-        <div class="menu-item">上鎖提醒設定</div>
         <div class="menu-section">其它</div>
         <div class="menu-item">最新消息</div>
         <div class="menu-item">手機裝置資訊</div>
         <div class="menu-item">黑名單 APP 查詢</div>
         <div class="menu-item">定位狀況查詢</div>
-        <div class="menu-item">船艦模式解鎖點列表</div>
         <div class="menu-item">使用規範</div>
-        <div class="menu-item">隱私權宣告</div>
-        <div class="menu-item">安裝訊息加密軟體</div>
-        <div class="menu-item">安裝行動裝置防護軟體</div>
-        <div style="height: 50px;"></div>
-    </div>
-</div>
-
-<div id="modalOverlay" class="modal-overlay">
-    <div class="modal-content">
-        <div class="modal-header">版本檢查 (民網)</div>
-        <div class="modal-body">已 46 天未檢查 MDM 版本，<br>現在要執行民網版本檢查嗎？</div>
-        <div class="modal-footer">
-            <div class="modal-btn" onclick="closeModal()">版本檢查</div>
-            <div id="dynamicBtn" class="modal-btn" onclick="closeModal()">略過檢查 (直接上鎖)</div>
-            <div class="modal-btn" style="font-weight:600;" onclick="closeModal()">取 消</div>
-        </div>
+        <div style="height: 40px;"></div>
     </div>
 </div>
 
 <script>
-function updateTime(){
-    const d=new Date();
-    const m=String(d.getMonth()+1).padStart(2,'0');
-    const day=String(d.getDate()).padStart(2,'0');
-    const h=String(d.getHours()).padStart(2,'0');
-    const min=String(d.getMinutes()).padStart(2,'0');
-    const s=String(d.getSeconds()).padStart(2,'0');
-    document.getElementById('time').innerText = `${m}/${day} ${h}:${min}:${s}`;
+function toggleMenu() {
+    document.body.classList.toggle('menu-active');
 }
-setInterval(updateTime, 1000);
-updateTime();
-
-function toggleMenu() { document.body.classList.toggle('menu-active'); }
-function openModal(mode) {
-    const btn = document.getElementById('dynamicBtn');
-    btn.innerText = mode === 'unlock' ? '略過檢查 (直接解鎖)' : '略過檢查 (直接上鎖)';
-    document.getElementById('modalOverlay').style.display = 'flex';
-}
-function closeModal() { document.getElementById('modalOverlay').style.display = 'none'; }
 </script>
 
 </body>
